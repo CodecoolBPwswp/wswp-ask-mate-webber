@@ -24,6 +24,7 @@ def get_question_byid(q_id):
     return question, answers
 
 
+
 #unfinished
 #def question_vote_up(question_id):
 #    for key, value in question_table:
