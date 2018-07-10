@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+    {% for key in q_head %}
+       <tr>
+            <th> {{ key }} </th>
+            <td> {{ question[key] }} </td>
+       </tr>
+    {% endfor %}
+    </table>
+    <table>
+    {% for key in a_head %}
+       <tr>
+        {%  for answer in answers %}
+            <th> {{ key }} </th>
+            <td> {{ answer[key] }} </td>
+        {% endfor %}
+       </tr>
+    {% endfor %}
+    </table>
+    <form action="/question/{{ question['id'] }}/new-answer"  method="POST">
+        <button type="submit">
+            ADD ANSWER
+        </button>
+    </form>
+</body>
+</html>
