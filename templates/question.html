@@ -5,16 +5,15 @@
     <title>Ask a question | Askmate</title>
 </head>
 <body>
-    <h2>Ask a question</h2><br>
-    <h3>Enter your question:</h3>
-    <form action="question.html" value="{{ question.title }} method="POST">
+    <h2>Enter your question:</h2>
+    <form action="question.html" method="POST">
     <div>
-        <label for="Title">Title</label>
-        <input type="text" id="id">
-    </div>
+        <label for="Title">Question:</label><br>
+        <input type="text">
+    </div><br>
         <div>
-            <label for="message">Question:</label>
-            <textarea id="id"  rows="10" cols="70">{{ question.message }}
+            <label for="message">Description:</label><br>
+            <textarea rows="10" cols="70">
             </textarea>
         </div>
     </form>
