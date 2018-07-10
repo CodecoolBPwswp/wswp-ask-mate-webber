@@ -11,8 +11,10 @@ def index():
     return render_template("list.html", questions=questions)
 
 
-@app.route("/question/<int:question_id>")
+@app.route("/question/<int:question_id>", methods=['GET', 'POST'])
 def question(question_id):
+    if request.method == "POST":
+
     question, answers = data_manager.get_question_byid(question_id)
     q_head = data_manager.QUESTION_HEADERS
     a_head = data_manager.ANSWER_HEADERS
@@ -22,13 +24,22 @@ def question(question_id):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET','POST'])
 def write_answer(question_id):
-    if request.method == 'GET':
+    #if request.method == 'GET':
+        #next_id = data_manager.get_next_answer_id()
+        #return render_template('new_answer.html', next_id=next_id, question_id=question_id)
+    if request.method == 'POST':
         next_id = data_manager.get_next_answer_id()
         return render_template('new_answer.html', next_id=next_id, question_id=question_id)
-    if request.method == 'POST':
-        data = request.form.to_dict()
-        return redirect('/list', new_answer=data)
+        #data = request.form.to_dict()
+        #return render_template('/question/<question_id>') #data ->data_man/connection ->beleírni
 
+
+#unfinished
+@app.route('/question/<question_id>/vote-up')
+def question_vote_up():
+    question_data = data_manager.question_table
+
+    return redirect('/question/<question_id>')
 
 if __name__ == '__main__':
     app.run(
