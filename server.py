@@ -19,8 +19,15 @@ def write_answer(question_id):
         return render_template('new_answer.html', next_id=next_id, question_id=question_id)
     if request.method == 'POST':
         data = request.form.to_dict()
-        return redirect('/list', new_answer=data)
+        return render_template('/question/<question_id>') #data ->data_man/connection ->beleírni
 
+
+#unfinished
+@app.route('/question/<question_id>/vote-up')
+def question_vote_up():
+    question_data = data_manager.question_table
+
+    return redirect('/question/<question_id>')
 
 if __name__ == '__main__':
     app.run(
