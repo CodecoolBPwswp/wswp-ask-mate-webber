@@ -9,5 +9,3 @@ def get_data(filename):
             lst.append(row)
     return lst
 
-
-print(get_data("sample_data/answers.csv"))
