@@ -8,10 +8,15 @@
     <table>
         {% for question in questions %}
         <tr>
-            <td>{{ question['id']  }}</td>
-            <td><a href="/question/<question_id>">{{ question['title'] }}</a></td>
+            <td>{{ question['id'] }}</td>
+            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
         </tr>
         {% endfor %}
     </table>
+    <form action="/add-question"  method="POST">
+        <button type="submit">
+            ADD QUESTION
+        </button>
+    </form>
 </body>
 </html>
