@@ -10,3 +10,7 @@ def get_data(filename):
     return lst
 
 
+def write_data(filename):
+    with open(filename, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile)
+        writer.writerow(data)
