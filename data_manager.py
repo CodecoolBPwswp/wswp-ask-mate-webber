@@ -54,11 +54,6 @@ def render_question_or_answer(data, question, question_id):
         increment_question_ids()
         answers = get_question_byid(question_id)[1]
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
-        return  data, answers
+        return data, answers
 
 
-
-#unfinished
-#def question_vote_up(question_id):
-#    for key, value in question_table:
-#        if key == 'id' and int(value) == int(question_id):
