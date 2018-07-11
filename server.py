@@ -27,13 +27,17 @@ def question(question_id):
     if request.method == "POST":
         data = request.form.to_dict()
         if "question_id" in data:
-            new_answers = data_manager.new_answer(data)
-            data_manager.put_answers_to_file('sample_data/answer.csv', new_answers)
+            updated_answers = data_manager.new_answer(data)
+            data_manager.put_new_data_to_file('sample_data/answer.csv', updated_answers, a_head)
             answers = data_manager.get_question_byid(question_id)[1]
             return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head,
                                    a_head=a_head)
         else:
-            pass
+            updated_questions = data_manager.new_question(data)
+            data_manager.put_new_data_to_file('sample_data/question.csv', updated_questions, q_head)
+            return render_template("question_with_answers.html")
+
+
     return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head, a_head=a_head)
 
 
