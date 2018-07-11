@@ -26,8 +26,15 @@ def new_answer(answer):
     return answer_table
 
 
-def put_answers_to_file(filename, data):
-    connection.write_data(filename, data, ANSWER_HEADERS)
+def new_question(question):
+    for questions in question_table:
+        questions["id"] = str(int(questions["id"]) + 1)
+    question_table.insert(0, question)
+    return question_table
+
+
+def put_new_data_to_file(filename, data, headers):
+    return connection.write_data(filename, data, headers)
 
 
 
