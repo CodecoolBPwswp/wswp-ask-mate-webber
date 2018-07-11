@@ -11,13 +11,11 @@ def index():
     return render_template("list.html", questions=questions)
 
 
-@app.route('/add-question/', methods=['GET','POST'])
+@app.route('/add-question', methods=['GET','POST'])
 def add_question():
-    if request.method == 'GET':
-        return redirect(url_for('/list'))
-    elif request.method == 'POST':
+    if request.method == 'POST':
         submission_time = data_manager.time_generator()
-        render_template("question.html",next_id=0,submission_time=submission_time)
+        return render_template("question.html",next_id=0,submission_time=submission_time)
 
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
@@ -35,9 +33,9 @@ def question(question_id):
                                    a_head=a_head)
         else:
             updated_questions = data_manager.new_question(data)
+            data_manager.incremenet_question_ids()
             data_manager.put_new_data_to_file('sample_data/question.csv', updated_questions, q_head)
-            return render_template("question_with_answers.html")
-
+            return render_template("question_with_answers.html", question=data, answer=answers, q_head=q_head, a_head=a_head)
 
     return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head, a_head=a_head)
 
