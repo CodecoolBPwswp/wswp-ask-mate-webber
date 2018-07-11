@@ -16,7 +16,8 @@ def add_question():
     if request.method == 'GET':
         return redirect(url_for('/list'))
     elif request.method == 'POST':
-        render_template("question.html")
+        submission_time = data_manager.time_generator()
+        render_template("question.html",next_id=0,submission_time=submission_time)
 
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
