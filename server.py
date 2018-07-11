@@ -39,13 +39,6 @@ def write_answer(question_id):
         return render_template('new_answer.html', next_id=0, question_id=question_id, submission_time=submission_time)
 
 
-# unfinished
-@app.route('/question/<question_id>/vote-up')
-def question_vote_up():
-    question_data = data_manager.question_table
-
-    return redirect('/question/<question_id>')
-
 
 if __name__ == '__main__':
     app.run(
