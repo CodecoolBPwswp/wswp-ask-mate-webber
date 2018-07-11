@@ -56,6 +56,15 @@ def render_question_or_answer(data, question, question_id):
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
         return  data, answers
 
+def question_under_update(question_id):
+    for question in question_table:
+        if question['id'] == str(question_id):
+            return question
+
+def update_question_table(new_data, question_id):
+    for i, question in enumerate(question_table):
+        if question['id'] == str(question_id):
+            question_table[i] = new_data[i]
 
 
 #unfinished
