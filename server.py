@@ -20,15 +20,16 @@ def add_question():
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
 def question(question_id):
+    html_file = "question_with_answers.html"
     q_head = data_manager.QUESTION_HEADERS
     a_head = data_manager.ANSWER_HEADERS
     question, answers = data_manager.get_question_byid(question_id)
     if request.method == "POST":
         data = request.form.to_dict()
-        html_file, question, answers= data_manager.render_question_or_answer(data, question, question_id)
+        question, answers= data_manager.render_question_or_answer(data, question, question_id)
         return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
-    return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head, a_head=a_head)
+    return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
