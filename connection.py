@@ -10,7 +10,9 @@ def get_data(filename):
     return lst
 
 
-def write_data(filename):
-    with open(filename, 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile)
-        writer.writerow(data)
+def write_data(filename, data, headers):
+    with open(filename, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)
