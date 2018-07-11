@@ -9,10 +9,10 @@
     <p>Your answer:</p>
     <form action='/question/{{ question_id }}' method="POST">
         <input id="id" name="id" type="hidden" value="{{ next_id }}">
-        <input id="submission_time" name="submission_time" type="hidden" value="{{ question_id }}">
+        <input id="submission_time" name="submission_time" type="hidden" value="{{ submission_time }}">
         <input id="vote_number" name="vote_number" type="hidden" value="0">
         <input id="question_id" name="question_id" type="hidden" value="{{ question_id }}">
-        <textarea id="answer" name="answer" rows="10" cols="50" minlength="10"></textarea>
+        <textarea id="message" name="message" rows="10" cols="50" minlength="10"></textarea>
         <p><button type="submit">Add your answer</button></p>
     </form>
 </body>
