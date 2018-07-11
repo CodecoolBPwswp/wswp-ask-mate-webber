@@ -32,6 +32,11 @@ def new_question(question):
     question_table.insert(0, question)
     return question_table
 
+def delete():
+    connection.write_data('question.csv', data, QUESTION_HEADERS)
+            for row in csvWrite:
+                del row[0]
+                csvWrite.writerow(row)
 
 def increment_question_ids():
     for answers in answer_table:
@@ -54,7 +59,7 @@ def render_question_or_answer(data, question, question_id):
         increment_question_ids()
         answers = get_question_byid(question_id)[1]
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
-        return  data, answers
+        return data, answers
 
 
 
