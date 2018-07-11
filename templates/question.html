@@ -5,17 +5,22 @@
     <title>Ask a question | Askmate</title>
 </head>
 <body>
-    <h2>Enter your question:</h2>
-    <form action="question.html" method="POST">
+    <h2>Enter your question</h2>
     <div>
-        <label for="Title">Question:</label><br>
-        <input type="text">
-    </div><br>
-        <div>
-            <label for="message">Description:</label><br>
-            <textarea rows="10" cols="70">
-            </textarea>
-        </div>
+        <p>Title:</p>
+        <input id="title" type="text" name="title" value="{{ title }}"><br>
+        <br>
+        <b>Description</b>
+        <form action='/question/{{ question_id }}' method="POST">
+        <input id="id" name="id" type="hidden" value="{{ next_id }}">
+        <input id="submission_time" name="submission_time" type="hidden" value="{{ submission_time }}">
+        <input id="vote_number" name="vote_number" type="hidden" value="0">
+        <input id="question_id" name="question_id" type="hidden" value="{{ question_id }}">
+            <input id="view_number" name="view_number" type="hidden" value="{{ view_number }}">
+            <input id="image" name="image" type="hidden" value=""> <! -- TODO: image function>
+        <textarea id="message" name="message" rows="10" cols="50" minlength="10"></textarea>
+        <p><button type="submit">Add your question</button></p>
     </form>
+    </div>
 </body>
 </html>
