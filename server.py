@@ -13,18 +13,10 @@ def index():
 
 @app.route('/add-question/', methods=['GET','POST'])
 def add_question():
-    if request.method == 'POST':
-            new_question = {
-            "id": request.form["id"],
-            "submission_time":request.form["submission_time"],
-            "view_number":request.form["view_number"],
-            "vote_number":request.form["vote_number"],
-            "title": request.form["title"],
-            "message": request.form["message"],
-            "image":"image"
-            }
-    data_manager.add_question(new_question)
-    return redirect(url_for('/list'))
+    if request.method == 'GET':
+        return redirect(url_for('/list'))
+    elif request.method == 'POST':
+        render_template("question.html")
 
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
@@ -40,7 +32,6 @@ def question(question_id):
             return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head,
                                    a_head=a_head)
         else:
-
             pass
     return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head, a_head=a_head)
 
