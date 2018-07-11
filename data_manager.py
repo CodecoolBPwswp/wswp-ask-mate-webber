@@ -33,7 +33,7 @@ def new_question(question):
     return question_table
 
 
-def incremenet_question_ids():
+def increment_question_ids():
     for answers in answer_table:
         answers["question_id"] = str(int(answers["question_id"]) + 1)
     return answer_table
@@ -43,6 +43,18 @@ def put_new_data_to_file(filename, data, headers):
     return connection.write_data(filename, data, headers)
 
 
+def render_question_or_answer(data, question, question_id):
+    if "question_id" in data:
+        updated_answers = new_answer(data)
+        put_new_data_to_file('sample_data/answer.csv', updated_answers, ANSWER_HEADERS)
+        answers = get_question_byid(question_id)[1]
+        return "question_with_answers.html", question, answers
+    else:
+        updated_questions = new_question(data)
+        increment_question_ids()
+        answers = get_question_byid(question_id)[1]
+        put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
+        return "question_with_answers.html", data, answers
 
 
 
