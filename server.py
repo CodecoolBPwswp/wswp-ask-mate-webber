@@ -39,6 +39,12 @@ def write_answer(question_id):
         return render_template('new_answer.html', next_id=0, question_id=question_id, submission_time=submission_time)
 
 
+@app.route('/question/<question_id>/edit')
+def update_question(question_id):
+    update = True
+    question_needs_update = data_manager.question_under_update(question_id)
+    return render_template('question.html', question=question_needs_update, update=update)
+
 
 if __name__ == '__main__':
     app.run(
