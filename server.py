@@ -27,8 +27,9 @@ def question(question_id):
     if request.method == "POST":
         data = request.form.to_dict()
         if "question_id" in data:
-            answers = data_manager.new_answer(data)
-            data_manager.put_answers_to_file('sample_data/answer.csv', answers)
+            new_answers = data_manager.new_answer(data)
+            data_manager.put_answers_to_file('sample_data/answer.csv', new_answers)
+            answers = data_manager.get_question_byid(question_id)[1]
             return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head,
                                    a_head=a_head)
         else:
