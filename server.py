@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/list')
 def index():
-    questions =  data_manager.question_table
+    questions = data_manager.question_table
     return render_template("list.html", questions=questions)
 
 
@@ -25,17 +25,8 @@ def question(question_id):
     question, answers = data_manager.get_question_byid(question_id)
     if request.method == "POST":
         data = request.form.to_dict()
-        if "question_id" in data:
-            updated_answers = data_manager.new_answer(data)
-            data_manager.put_new_data_to_file('sample_data/answer.csv', updated_answers, a_head)
-            answers = data_manager.get_question_byid(question_id)[1]
-            return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head,
-                                   a_head=a_head)
-        else:
-            updated_questions = data_manager.new_question(data)
-            data_manager.incremenet_question_ids()
-            data_manager.put_new_data_to_file('sample_data/question.csv', updated_questions, q_head)
-            return render_template("question_with_answers.html", question=data, answer=answers, q_head=q_head, a_head=a_head)
+        html_file, question, answers= data_manager.render_question_or_answer(data, question, question_id)
+        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
     return render_template("question_with_answers.html", question=question, answers=answers, q_head=q_head, a_head=a_head)
 
