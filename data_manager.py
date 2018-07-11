@@ -48,13 +48,13 @@ def render_question_or_answer(data, question, question_id):
         updated_answers = new_answer(data)
         put_new_data_to_file('sample_data/answer.csv', updated_answers, ANSWER_HEADERS)
         answers = get_question_byid(question_id)[1]
-        return "question_with_answers.html", question, answers
+        return question, answers
     else:
         updated_questions = new_question(data)
         increment_question_ids()
         answers = get_question_byid(question_id)[1]
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
-        return "question_with_answers.html", data, answers
+        return  data, answers
 
 
 
