@@ -5,8 +5,8 @@ import time
 question_table = connection.get_data('sample_data/question.csv') #list of dict
 answer_table = connection.get_data('sample_data/answer.csv') #list of dict
 
-QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message,image"]
-ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message","image"]
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
 def time_generator():
@@ -31,6 +31,12 @@ def new_question(question):
         questions["id"] = str(int(questions["id"]) + 1)
     question_table.insert(0, question)
     return question_table
+
+
+def incremenet_question_ids():
+    for answers in answer_table:
+        answers["question_id"] = str(int(answers["question_id"]) + 1)
+    return answer_table
 
 
 def put_new_data_to_file(filename, data, headers):
