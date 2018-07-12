@@ -41,6 +41,7 @@
             {% elif key == "submission_time" %}
                 <th width="10%"> {{ key }} </th>
                 <td width="80%"> {{ answer[key]|ctime }} </td>
+                <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE</button></td></form>
             {% else %}
             <th width="20%"> {{ key }} </th>
             <td width="80%"> {{ answer[key] }} </td>
@@ -61,7 +62,7 @@
             EDIT QUESTION
         </button>
     </form>
-    <form action="/question/{{ question['id'] }}/delete" method="POST">
+    <form action="/question/{{ question['id'] }}/delete" >
         <button type="submit">
             DELETE QUESTION
         </button>
