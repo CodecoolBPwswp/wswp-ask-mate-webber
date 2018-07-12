@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import data_manager
 import operator
+from operator import itemgetter
 import time
 
 
@@ -10,11 +11,16 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/list')
 def index():
+    command = request.args.to_dict()
     questions = data_manager.get_all_questions()
+    if command and command['order_direction'] == 'desc':
+        questions = sorted(questions, key=itemgetter(command['order_by']), reverse=True)
+    elif command and command['order_direction'] == 'asc':
+        questions = sorted(questions, key=itemgetter(command['order_by']))
     return render_template("list.html", questions=questions)
 
 
-@app.route('/add-question')
+@app.route('/add-question', methods=['POST'])
 def add_question():
     submission_time = data_manager.time_generator()
     return render_template("question.html", next_id=0, submission_time=submission_time)
