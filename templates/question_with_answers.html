@@ -2,43 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Askmate | Forum</title>
-    <link rel="stylesheet" href="style.css">
+    <title>AskMate | Forum</title>
     <style>
-body {
-    background-color: Silver ;
+        body {
+    background-color: Silver;
 }
-       table {
+table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 60%;
+    width: 40%;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    padding: 6px;
 }
 
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+        .upbutton {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.upbutton:hover {
+    background-color: green;
+}
+                .downbutton {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+
+}
+
+.downbutton:hover {
+    background-color: red;
+}
 </style>
 </head>
 <body>
-    <h1>Welcome to Askmate</h1>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
         {% if key == "vote_number" %}
-            <form action="/question" method="GET">
-                <th width="20%"> {{ key }} </th>
-                <td width="80%"> {{ question[key] }} </td>
-                <td><input type="submit" value="VOTE UP"></td><br>
-                <td><input type="submit" value="VOTE DOWN"></td>
-                <br>
+            <th width="20%"> Vote Number</th>
+            <td width="80%"> {{ question[key] }} </td>
+            <form>
+            <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
+                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
             </form>
-
+        {% elif key == "submission_time" %}
+            <th width="10%"> Submission time </th>
+            <td width="80%"> {{ question[key]|ctime }} </td>
         {% else %}
             <th width="20%"> {{ key }} </th>
             <td width="80%"> {{ question[key] }} </td>
@@ -52,14 +78,18 @@ tr:nth-child(even) {
         <table width="50%" border="1">
         {% for key in a_head %}
         <tr>
-
             {% if key == "vote_number" %}
-            <form action="question_with_answers.html" method="GET">
-                <th width="10%"> {{ key }} </th>
+                <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
-                <td width="20"><input type="submit" value="VOTE UP"></td>
-                <td width="20"><input type="submit" value="VOTE DOWN"></td>
-            </form>
+                <form>
+                <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
+                    <br>
+                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
+                </form>
+            {% elif key == "submission_time" %}
+                <th width="10%"> Submission time </th>
+                <td width="80%"> {{ answer[key]|ctime }} </td>
+                <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
             {% else %}
             <th width="20%"> {{ key }} </th>
             <td width="80%"> {{ answer[key] }} </td>
@@ -80,7 +110,7 @@ tr:nth-child(even) {
             EDIT QUESTION
         </button>
     </form>
-    <form action="/question/{{ question['id'] }}/delete" method="POST">
+    <form action="/question/{{ question['id'] }}/delete" >
         <button type="submit">
             DELETE QUESTION
         </button>

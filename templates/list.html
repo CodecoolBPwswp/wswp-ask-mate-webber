@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Questions | Askmate</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <table>
         {% for question in questions %}
         <tr>
-            <td>{{ question['id'] }}</td>
+            <td>ID: {{ question['id'] }}</td>
             <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
         </tr>
         {% endfor %}
     </table>
-    <form action="/add-question"  method="POST">
+    <form action="/add-question" method="POST">
         <button type="submit">
             ADD QUESTION
         </button>
