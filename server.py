@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/list')
 def index():
-    questions = data_manager.question_table
+    questions = data_manager.get_all_questions()
     return render_template("list.html", questions=questions)
 
 
@@ -39,11 +39,17 @@ def write_answer(question_id):
         return render_template('new_answer.html', next_id=0, question_id=question_id, submission_time=submission_time)
 
 
-@app.route('/question/<question_id>/edit')
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def update_question(question_id):
-    update = True
-    question_needs_update = data_manager.question_under_update(question_id)
-    return render_template('question.html', question=question_needs_update, update=update)
+    if request.method == 'GET':
+        update = True
+        question_needs_update = data_manager.question_under_update(question_id)
+        return render_template('question.html', question=question_needs_update, update=update)
+    else:
+        data = request.form.to_dict()
+        updated_question_table = data_manager.update_question_table(data, data['id'])
+        return redirect('/list')
+
 
 
 
