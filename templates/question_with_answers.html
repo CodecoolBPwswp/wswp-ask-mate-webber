@@ -8,6 +8,7 @@
     background-color: #F0EDE5
 }
 table {
+    table-layout: auto;
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 80%;
@@ -57,23 +58,23 @@ tr:nth-child(even) {
     {% for key in q_head %}
        <tr>
         {% if key == "vote_number" %}
-            <th width="20%"> Vote Number</th>
-            <td width="60%"> {{ question[key] }} </td>
+            <th width="10%"> Vote Number</th>
+            <td width="80%"> {{ question[key] }} </td>
             <form>
-            <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
-                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
+            <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
+                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
             </form>
         {% elif key == "submission_time" %}
             <th width="10%"> Submission time </th>
             <td width="80%"> {{ question[key]|ctime }} </td>
         {% elif key == "view_number" %}
-            <th width="20%">Views</th>
+            <th width="10%">Views</th>
             <td width="80%"> {{ question[key] }} </td>
         {% elif key == "title" %}
-            <th width="20%">Question</th>
+            <th width="10%">Question</th>
             <td width="80%"> {{ question[key] }} </td>
         {% elif key == "message" %}
-            <th width="20%">Description</th>
+            <th width="10%">Description</th>
             <td width="80%"> {{ question[key] }} </td>
        {% endif %}
        </tr>
@@ -93,14 +94,14 @@ tr:nth-child(even) {
                 <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
                 <form>
-                <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
+                <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
                     <br>
-                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
+                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
                 </form>
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
                 <td width="80%"> {{ answer[key]|ctime }} </td>
-                <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
+                <form><td width="10"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
 
             {% endif %}
         </tr>

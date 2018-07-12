@@ -29,7 +29,7 @@ tr:nth-child(even) {
     <div>
         <p>Title:</p>
         <form action='/question/{{ question.id if update else next_id }}{{ "/edit" if update }}' method="POST">
-        <input id="title" type="text" name="title" value="{{ question.title if update else title}}"><br>
+        <input id="title" type="text" name="title" value="{{ question.title if update else title}}" required><br>
         <br>
         <p><b>Description</b></p>
         <input id="id" name="id" type="hidden" value="{{ question.id if update else next_id }}">
