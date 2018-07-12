@@ -14,18 +14,32 @@ def index():
     return render_template("list.html", questions=questions)
 
 
-@app.route('/add-question', methods=['GET', 'POST'])
+@app.route('/add-question')
 def add_question():
-    if request.method == 'POST':
-        submission_time = data_manager.time_generator()
-        return render_template("question.html", next_id=0, submission_time=submission_time)
+    submission_time = data_manager.time_generator()
+    return render_template("question.html", next_id=0, submission_time=submission_time)
 
 
-@app.route("/question/<question_id>/delete", methods=["POST"])
+@app.route("/question/<question_id>/delete")
 def delete_question(question_id):
-    if request.method == "POST":
-        data_manager.delete(question_id)
+    data_manager.delete(question_id)
     return redirect('/list')
+
+
+@app.route("/answer/<answer_id>/delete", methods=['POST'])
+def delete_answer(answer_id):
+    data_manager.delete_answer(answer_id)
+    return redirect("/list")
+
+    html_file = "question_with_answers.html"
+    q_head = data_manager.QUESTION_HEADERS
+    a_head = data_manager.ANSWER_HEADERS
+    data = request.form.to_dict()
+    print(data)
+    question = data.get("question")
+    print(question)
+    new_answers = data_manager.delete_answer(answer_id)
+    return render_template(html_file, question=question, answers=new_answers, q_head=q_head, a_head=a_head)
 
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
@@ -97,6 +111,7 @@ def down_vote(question_id):
 @app.template_filter('ctime')
 def timectime(s):
     return time.ctime(int(s))
+
 
 if __name__ == '__main__':
     app.run(
