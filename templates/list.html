@@ -5,6 +5,17 @@
     <title>Questions</title>
 </head>
 <body>
+    <form action="/list">
+        <select name="order_by">
+            <option value="id">ID</option>
+            <option value="title">Title</option>
+        </select>
+        <select name="order_direction">
+            <option value="desc">descending</option>
+            <option value="asc">ascending</option>
+        </select>
+        <input type="submit" value="order">
+    </form>
     <table>
         {% for question in questions %}
         <tr>
@@ -13,7 +24,7 @@
         </tr>
         {% endfor %}
     </table>
-    <form action="/add-question">
+    <form action="/add-question" method="POST">
         <button type="submit">
             ADD QUESTION
         </button>
