@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 import data_manager
+import operator
+import time
+
 
 app = Flask(__name__)
 
@@ -45,6 +48,42 @@ def update_question(question_id):
     question_needs_update = data_manager.question_under_update(question_id)
     return render_template('question.html', question=question_needs_update, update=update)
 
+
+@app.route('/question/<int:question_id>/vote-up', methods=["POST"])
+def up_vote(question_id):
+    operatorr = operator.__add__
+    html_file = "question_with_answers.html"
+    q_head = data_manager.QUESTION_HEADERS
+    a_head = data_manager.ANSWER_HEADERS
+    question, answers = data_manager.get_question_byid(question_id)
+    data = request.form.to_dict()
+    if "question" in data.keys():
+        question = data_manager.vote(question_id, question, data, operatorr)
+        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+    elif "answer" in data.keys():
+        answers = data_manager.vote(question_id, answers, data, operatorr)
+        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+
+
+@app.route('/question/<int:question_id>/vote-down', methods=["POST"])
+def down_vote(question_id):
+    operatorr = operator.__sub__
+    html_file = "question_with_answers.html"
+    q_head = data_manager.QUESTION_HEADERS
+    a_head = data_manager.ANSWER_HEADERS
+    question, answers = data_manager.get_question_byid(question_id)
+    data = request.form.to_dict()
+    if "question" in data.keys():
+        question = data_manager.vote(question_id, question, data, operatorr)
+        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+    elif "answer" in data.keys():
+        answers = data_manager.vote(question_id, answers, data, operatorr)
+        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+
+
+@app.template_filter('ctime')
+def timectime(s):
+    return time.ctime(int(s))
 
 if __name__ == '__main__':
     app.run(
