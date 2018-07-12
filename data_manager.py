@@ -32,16 +32,35 @@ def new_question(question):
     question_table.insert(0, question)
     return question_table
 
-def delete():
-    connection.write_data('question.csv', data, QUESTION_HEADERS)
-            for row in csvWrite:
-                del row[0]
-                csvWrite.writerow(row)
+
+def delete(question_id):
+    for i, question in enumerate(question_table):
+            if question['id'] == question_id:
+                del question_table[i]
+    for i, answer in enumerate(answer_table):
+        if answer['question_id'] == question_id:
+            del answer_table[i:-1]
+    for i, question in enumerate(question_table):
+        for answer in answer_table:
+           if answer["question_id"] == question['id']:
+                answer["question_id"] = i
+        question["id"] = i
+    put_new_data_to_file('sample_data/question.csv', question_table, QUESTION_HEADERS)
+    put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
+    return question_id
+
 
 def increment_question_ids():
     for answers in answer_table:
         answers["question_id"] = str(int(answers["question_id"]) + 1)
     return answer_table
+
+
+def decrease_question_ids(question):
+    for i, question in enumerate(question_table):
+        if question["id"] == int(question["id"]):
+            question["id"] = question_table[i]
+    return question_table
 
 
 def put_new_data_to_file(filename, data, headers):

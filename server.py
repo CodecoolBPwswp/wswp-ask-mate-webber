@@ -17,10 +17,11 @@ def add_question():
         submission_time = data_manager.time_generator()
         return render_template("question.html", next_id=0, submission_time=submission_time)
 
-@app.route("/question/<question_id>/delete", methods=["GET", "DELETE"])
-def delete_question():
-    if request.method == "DELETE":
-        return request('delete', url, *kwargs)
+
+@app.route("/question/<question_id>/delete", methods=["POST"])
+def delete_question(question_id):
+    if request.method == "POST":
+        data_manager.delete(question_id)
     return redirect('/list')
 
 

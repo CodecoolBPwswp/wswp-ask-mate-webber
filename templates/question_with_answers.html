@@ -56,6 +56,11 @@
             EDIT QUESTION
         </button>
     </form>
+    <form action="/question/{{ question['id'] }}/delete" method="POST">
+        <button type="submit">
+            DELETE QUESTION
+        </button>
+    </form>
     <form action="/list">
         <button type="submit">
             BACK TO QUESTIONS
