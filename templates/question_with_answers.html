@@ -5,37 +5,65 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
+    <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
-            <th> {{ key }} </th>
-            <td> {{ question[key] }} </td>
+        {% if key == "vote_number" %}
+            <form action="/question" method="GET">
+                <th width="20%"> {{ key }} </th>
+                <td width="80%"> {{ question[key] }} </td>
+                <td><input type="submit" value="VOTE UP"></td>
+                <td><input type="submit" value="VOTE DOWN"></td>
+            </form>
+        {% else %}
+            <th width="20%"> {{ key }} </th>
+            <td width="80%"> {{ question[key] }} </td>
+       {% endif %}
        </tr>
     {% endfor %}
     </table>
-    <table>
-    {% for key in a_head %}
-       <tr>
-        {%  for answer in answers %}
-            <th> {{ key }} </th>
-            <td> {{ answer[key] }} </td>
+    <br>
+
+    {%  for answer in answers %}
+        <table width="50%" border="1">
+        {% for key in a_head %}
+        <tr>
+
+            {% if key == "vote_number" %}
+            <form action="question_with_answers.html" method="GET">
+                <th width="10%"> {{ key }} </th>
+                <td width="80%"> {{ answer[key] }} </td>
+                <td width="20"><input type="submit" value="VOTE UP"></td>
+                <td width="20"><input type="submit" value="VOTE DOWN"></td>
+            </form>
+            {% else %}
+            <th width="20%"> {{ key }} </th>
+            <td width="80%"> {{ answer[key] }} </td>
+            {% endif %}
+        </tr>
         {% endfor %}
-       </tr>
+        </table><br>
     {% endfor %}
-    </table>
+
+    <br>
     <form action="/question/{{ question['id'] }}/new-answer"  method="POST">
         <button type="submit">
             ADD ANSWER
         </button>
     </form>
-    <form action="/list">
-        <button type="submit">
-            BACK TO QUESTIONS
-        </button>
-    </form>
     <form action="/question/{{ question['id'] }}/edit">
         <button type="submit">
             EDIT QUESTION
+        </button>
+    </form>
+    <form action="/question/{{ question['id'] }}/delete" method="POST">
+        <button type="submit">
+            DELETE QUESTION
+        </button>
+    </form>
+    <form action="/list">
+        <button type="submit">
+            BACK TO QUESTIONS
         </button>
     </form>
 </body>

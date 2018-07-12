@@ -37,10 +37,34 @@ def new_question(question):
     return question_table
 
 
+def delete(question_id):
+    for i, question in enumerate(question_table):
+            if question['id'] == question_id:
+                del question_table[i]
+    for i, answer in enumerate(answer_table):
+        if answer['question_id'] == question_id:
+            del answer_table[i:-1]
+    for i, question in enumerate(question_table):
+        for answer in answer_table:
+           if answer["question_id"] == question['id']:
+                answer["question_id"] = i
+        question["id"] = i
+    put_new_data_to_file('sample_data/question.csv', question_table, QUESTION_HEADERS)
+    put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
+    return question_id
+
+
 def increment_question_ids():
     for answers in answer_table:
         answers["question_id"] = str(int(answers["question_id"]) + 1)
     return answer_table
+
+
+def decrease_question_ids(question):
+    for i, question in enumerate(question_table):
+        if question["id"] == int(question["id"]):
+            question["id"] = question_table[i]
+    return question_table
 
 
 def put_new_data_to_file(filename, data, headers):
@@ -58,7 +82,7 @@ def render_question_or_answer(data, question, question_id):
         increment_question_ids()
         answers = get_question_byid(question_id)[1]
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
-        return  data, answers
+        return data, answers
 
 def question_under_update(question_id):
     question_table = get_all_questions()
@@ -81,8 +105,3 @@ def update_question_table(new_data, question_id):
     print(new_question_table)
     #return new_question_table
 
-
-#unfinished
-#def question_vote_up(question_id):
-#    for key, value in question_table:
-#        if key == 'id' and int(value) == int(question_id):
