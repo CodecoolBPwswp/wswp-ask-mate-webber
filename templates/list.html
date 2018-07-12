@@ -5,7 +5,7 @@
     <title>Questions</title>
      <style>
         body {
-    background-color: Silver;
+    background-color: #F0EDE5
 }
 table {
     font-family: arial, sans-serif;
@@ -20,7 +20,7 @@ td, th {
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #92B6D5;
 }
 </style>
 </head>
@@ -31,10 +31,10 @@ tr:nth-child(even) {
             <option value="title" selected>Title</option>
         </select>
         <select name="order_direction">
-            <option value="desc">descending</option>
-            <option value="asc">ascending</option>
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
         </select>
-        <input type="submit" value="order">
+        <input type="submit" value="Order">
     </form>
     <table>
         {% for question in questions %}

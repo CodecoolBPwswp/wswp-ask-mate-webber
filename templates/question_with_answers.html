@@ -5,7 +5,7 @@
     <title>AskMate | Forum</title>
     <style>
         body {
-    background-color: Silver;
+    background-color: #F0EDE5
 }
 table {
     font-family: arial, sans-serif;
@@ -20,15 +20,15 @@ td, th {
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #92B6D5;
 }
         .upbutton {
     background-color: #4CAF50;
     border: none;
     color: white;
-    padding: 15px 25px;
+    padding: 10px 20px;
     text-align: center;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -39,9 +39,9 @@ tr:nth-child(even) {
     background-color: red;
     border: none;
     color: white;
-    padding: 15px 25px;
+    padding: 10px 20px;
     text-align: center;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
 
 }
@@ -52,12 +52,13 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
+    <h2>Question:</h2>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
         {% if key == "vote_number" %}
             <th width="20%"> Vote Number</th>
-            <td width="80%"> {{ question[key] }} </td>
+            <td width="60%"> {{ question[key] }} </td>
             <form>
             <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
                 <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
@@ -65,8 +66,14 @@ tr:nth-child(even) {
         {% elif key == "submission_time" %}
             <th width="10%"> Submission time </th>
             <td width="80%"> {{ question[key]|ctime }} </td>
-        {% else %}
-            <th width="20%"> {{ key }} </th>
+        {% elif key == "view_number" %}
+            <th width="20%">Views</th>
+            <td width="80%"> {{ question[key] }} </td>
+        {% elif key == "title" %}
+            <th width="20%">Question</th>
+            <td width="80%"> {{ question[key] }} </td>
+        {% elif key == "message" %}
+            <th width="20%">Description</th>
             <td width="80%"> {{ question[key] }} </td>
        {% endif %}
        </tr>
@@ -74,11 +81,15 @@ tr:nth-child(even) {
     </table>
     <br>
 
+    <h2>Answers:</h2>
     {%  for answer in answers %}
         <table width="50%" border="1">
         {% for key in a_head %}
         <tr>
-            {% if key == "vote_number" %}
+            {% if key == "message" %}
+                <th width="10%">Answer</th>
+                <td width="80%"> {{ answer[key] }} </td>
+            {% elif key == "vote_number" %}
                 <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
                 <form>
@@ -90,9 +101,7 @@ tr:nth-child(even) {
                 <th width="10%"> Submission time </th>
                 <td width="80%"> {{ answer[key]|ctime }} </td>
                 <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
-            {% else %}
-            <th width="20%"> {{ key }} </th>
-            <td width="80%"> {{ answer[key] }} </td>
+
             {% endif %}
         </tr>
         {% endfor %}
