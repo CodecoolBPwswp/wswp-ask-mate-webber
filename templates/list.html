@@ -28,6 +28,7 @@ tr:nth-child(even) {
     <form action="/list">
         <select name="order_by">
             <option value="id">ID</option>
+            <option value="submission_time" selected>Time</option>
             <option value="title" selected>Title</option>
         </select>
         <select name="order_direction">
@@ -39,7 +40,7 @@ tr:nth-child(even) {
     <table>
         {% for question in questions %}
         <tr>
-            <td>ID: {{ question['id'] }}.</td>
+            <td>{{ question['id'] }}.</td>
             <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
         </tr>
         {% endfor %}

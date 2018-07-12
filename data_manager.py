@@ -46,17 +46,14 @@ def new_question(question):
 def delete(question_id):
     question_table = get_all_questions()
     answer_table = get_all_answer()
-    for question in question_table:
-        if question['id'] == question_id:
-            for answer in answer_table:
-                if answer["question_id"] == question_id:
-                    answer_table.remove(answer)
-            else:
-                question_table.remove(question)
+    answer_table = [answer for answer in answer_table if answer['question_id'] != question_id]
+    question_table = [question for question in question_table if question['id'] != question_id]
+
     for i, question in enumerate(question_table):
         for answer in answer_table:
             if question['id'] == answer["question_id"]:
                 answer['question_id'] = i
+
     for i, question in enumerate(question_table):
         question['id'] = i
 

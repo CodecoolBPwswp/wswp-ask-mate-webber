@@ -36,7 +36,7 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     data_manager.delete_answer(answer_id)
     return redirect("/list")
-
+################
     html_file = "question_with_answers.html"
     q_head = data_manager.QUESTION_HEADERS
     a_head = data_manager.ANSWER_HEADERS
