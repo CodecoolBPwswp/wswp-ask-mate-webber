@@ -57,7 +57,7 @@ def update_question(question_id):
         return render_template('question.html', question=question_needs_update, update=update)
     else:
         data = request.form.to_dict()
-        updated_question_table = data_manager.update_question_table(data, data['id'])
+        data_manager.update_question_table(data, data['id'])
         return redirect('/list')
 
 
