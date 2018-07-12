@@ -104,4 +104,4 @@ ENV/
 .idea/
 
 # ne toccsed fel az data fileokat
-.sample_data
+.sample_data/
