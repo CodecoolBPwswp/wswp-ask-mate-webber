@@ -2,9 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Askmate | Forum</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+body {
+    background-color: Silver ;
+}
+       table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 60%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
 </head>
 <body>
+    <h1>Welcome to Askmate</h1>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
@@ -12,9 +34,11 @@
             <form action="/question" method="GET">
                 <th width="20%"> {{ key }} </th>
                 <td width="80%"> {{ question[key] }} </td>
-                <td><input type="submit" value="VOTE UP"></td>
+                <td><input type="submit" value="VOTE UP"></td><br>
                 <td><input type="submit" value="VOTE DOWN"></td>
+                <br>
             </form>
+
         {% else %}
             <th width="20%"> {{ key }} </th>
             <td width="80%"> {{ question[key] }} </td>
