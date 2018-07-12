@@ -2,7 +2,7 @@ import connection
 import time
 
 
-answer_table = connection.get_data('sample_data/answer.csv') #list of dict
+#answer_table = connection.get_data('sample_data/answer.csv') #list of dict
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
@@ -11,18 +11,26 @@ def get_all_questions():
     question_table = connection.get_data('sample_data/question.csv')
     return question_table
 
+
+def get_all_answer():
+    answer_table = connection.get_data('sample_data/answer.csv')
+    return answer_table
+
+
 def time_generator():
     return str(time.time()).split(".")[0]
 
 
 def get_question_byid(q_id):
     q_table = get_all_questions()
+    answer_table = get_all_answer()
     question = [question for question in q_table if int(question['id']) == q_id][0]
     answers = [answer for answer in answer_table if int(answer['question_id']) == q_id]
     return question, answers
 
 
 def new_answer(answer):
+    answer_table = get_all_answer()
     for answers in answer_table:
         answers["id"] = str(int(answers["id"]) + 1)
     answer_table.insert(0, answer)
@@ -38,6 +46,8 @@ def new_question(question):
 
 
 def delete(question_id):
+    question_table = get_all_questions()
+    answer_table = get_all_answer()
     for i, question in enumerate(question_table):
             if question['id'] == question_id:
                 del question_table[i]
@@ -54,13 +64,16 @@ def delete(question_id):
     return question_id
 
 
-def increment_question_ids():
+def increment_answer_ids():
+    answer_table = get_all_answer()
     for answers in answer_table:
         answers["question_id"] = str(int(answers["question_id"]) + 1)
+    put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
     return answer_table
 
 
 def decrease_question_ids(question):
+    question_table = get_all_questions()
     for i, question in enumerate(question_table):
         if question["id"] == int(question["id"]):
             question["id"] = question_table[i]
@@ -79,7 +92,7 @@ def render_question_or_answer(data, question, question_id):
         return question, answers
     else:
         updated_questions = new_question(data)
-        increment_question_ids()
+        increment_answer_ids()
         answers = get_question_byid(question_id)[1]
         put_new_data_to_file('sample_data/question.csv', updated_questions, QUESTION_HEADERS)
         return data, answers
@@ -100,15 +113,13 @@ def update_question_table(new_data, question_id):
             update_question_table.append(new_data)
         else:
             update_question_table.append(question)
-            #question_table[i] = new_data[i]
-    print(update_question_table)
     connection.write_data('sample_data/question.csv', update_question_table, QUESTION_HEADERS)
-    new_question_table = connection.get_data('sample_data/question.csv')
-    print(new_question_table)
-    #return new_question_table
+    return
 
 
 def vote(question_id, data, button_data, operatorr):
+    question_table = get_all_questions()
+    answer_table = get_all_answer()
     if isinstance(data, dict):
         data['vote_number'] = str(operatorr(int(data['vote_number']), 1))
         updated_questions = [data if data['id'] == question['id'] else question for question in question_table ]
