@@ -2,8 +2,6 @@ import connection
 import time
 
 
-#answer_table = connection.get_data('sample_data/answer.csv') #list of dict
-
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
@@ -22,9 +20,9 @@ def time_generator():
 
 
 def get_question_byid(q_id):
-    q_table = get_all_questions()
+    question_table = get_all_questions()
     answer_table = get_all_answer()
-    question = [question for question in q_table if int(question['id']) == q_id][0]
+    question = [question for question in question_table if int(question['id']) == q_id][0]
     answers = [answer for answer in answer_table if int(answer['question_id']) == q_id]
     return question, answers
 
@@ -48,20 +46,34 @@ def new_question(question):
 def delete(question_id):
     question_table = get_all_questions()
     answer_table = get_all_answer()
-    for i, question in enumerate(question_table):
-            if question['id'] == question_id:
-                del question_table[i]
-    for i, answer in enumerate(answer_table):
-        if answer['question_id'] == question_id:
-            del answer_table[i:-1]
+    for question in question_table:
+        if question['id'] == question_id:
+            for answer in answer_table:
+                if answer["question_id"] == question_id:
+                    answer_table.remove(answer)
+            else:
+                question_table.remove(question)
     for i, question in enumerate(question_table):
         for answer in answer_table:
-           if answer["question_id"] == question['id']:
-                answer["question_id"] = i
-        question["id"] = i
+            if question['id'] == answer["question_id"]:
+                answer['question_id'] = i
+    for i, question in enumerate(question_table):
+        question['id'] = i
+
     put_new_data_to_file('sample_data/question.csv', question_table, QUESTION_HEADERS)
     put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
     return question_id
+
+
+def delete_answer(answer_id):
+    answer_table = get_all_answer()
+    for answer in answer_table:
+        if answer["id"] == answer_id:
+            answer_table.remove(answer)
+    for i, answer in enumerate(answer_table):
+        answer['id'] = i
+    put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
+    return answer_table
 
 
 def increment_answer_ids():
@@ -70,14 +82,6 @@ def increment_answer_ids():
         answers["question_id"] = str(int(answers["question_id"]) + 1)
     put_new_data_to_file('sample_data/answer.csv', answer_table, ANSWER_HEADERS)
     return answer_table
-
-
-def decrease_question_ids(question):
-    question_table = get_all_questions()
-    for i, question in enumerate(question_table):
-        if question["id"] == int(question["id"]):
-            question["id"] = question_table[i]
-    return question_table
 
 
 def put_new_data_to_file(filename, data, headers):
