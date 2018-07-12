@@ -102,3 +102,6 @@ ENV/
 
 # pycharm files
 .idea/
+
+# ne toccsed fel az data fileokat
+.sample_data

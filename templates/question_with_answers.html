@@ -2,21 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>AskMate | Forum</title>
+    <style>
+        body {
+    background-color: Silver;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 6px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+        .upbutton {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.upbutton:hover {
+    background-color: green;
+}
+                .downbutton {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+
+}
+
+.downbutton:hover {
+    background-color: red;
+}
+</style>
 </head>
 <body>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
         {% if key == "vote_number" %}
-            <th width="20%"> {{ key }} </th>
+            <th width="20%"> Vote Number</th>
             <td width="80%"> {{ question[key] }} </td>
             <form>
-            <td width="20"><button type="submit" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
-                <td width="20"><button type="submit" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
+            <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
+                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
             </form>
         {% elif key == "submission_time" %}
-            <th width="10%"> {{ key }} </th>
+            <th width="10%"> Submission time </th>
             <td width="80%"> {{ question[key]|ctime }} </td>
         {% else %}
             <th width="20%"> {{ key }} </th>
@@ -32,16 +79,17 @@
         {% for key in a_head %}
         <tr>
             {% if key == "vote_number" %}
-                <th width="10%"> {{ key }} </th>
+                <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
                 <form>
-                <td width="20"><button type="submit" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
-                <td width="20"><button type="submit" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
+                <td width="20"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
+                    <br>
+                <td width="20"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
                 </form>
             {% elif key == "submission_time" %}
-                <th width="10%"> {{ key }} </th>
+                <th width="10%"> Submission time </th>
                 <td width="80%"> {{ answer[key]|ctime }} </td>
-                <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE</button></td></form>
+                <form><td width="20"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
             {% else %}
             <th width="20%"> {{ key }} </th>
             <td width="80%"> {{ answer[key] }} </td>

@@ -81,7 +81,6 @@ def update_question(question_id):
         return redirect('/list')
 
 
-
 @app.route('/question/<int:question_id>/vote-up', methods=["POST"])
 def up_vote(question_id):
     operatorr = operator.__add__
