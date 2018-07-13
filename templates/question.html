@@ -28,7 +28,7 @@ tr:nth-child(even) {
     <h2>Enter your question</h2>
     <div>
         <p>Title:</p>
-        <form action='/question/{{ question.id if update else next_id }}{{ "/edit" if update }}' method="POST">
+        <form action='/question/{{ question.id if update else next_id }}{{ "/edit" if update }}' enctype=multipart/form-data method="POST">
         <input id="title" type="text" name="title" value="{{ question.title if update else title}}" required><br>
         <br>
         <p><b>Description</b></p>
@@ -38,6 +38,9 @@ tr:nth-child(even) {
             <input id="view_number" name="view_number" type="hidden" value="{{ question.view_number if update else '0' }}">
             <input id="image" name="image" type="hidden" value="{{ question.image if update else '' }}"> <! -- TODO: image function>
         <textarea id="message" name="message" rows="10" cols="50" minlength="10">{{ question.message if update else message }}</textarea>
+            <p><input type=file name=photo></p>
+
+
         <p><button type="submit">Add your question</button></p>
     </form>
     </div>

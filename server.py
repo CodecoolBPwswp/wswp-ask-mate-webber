@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 import data_manager
 import operator
 from operator import itemgetter
@@ -6,6 +7,14 @@ import time
 
 
 app = Flask(__name__)
+
+photos = UploadSet('photos', IMAGES)
+
+app.config['UPLOADED_PHOTOS_DEST'] = "static/images"
+configure_uploads(app, photos)
+
+q_head = data_manager.QUESTION_HEADERS
+a_head = data_manager.ANSWER_HEADERS
 
 
 @app.route('/')
@@ -34,38 +43,36 @@ def delete_question(question_id):
 
 @app.route("/answer/<answer_id>/delete", methods=['POST'])
 def delete_answer(answer_id):
-    data_manager.delete_answer(answer_id)
-    return redirect("/list")
-################
     html_file = "question_with_answers.html"
-    q_head = data_manager.QUESTION_HEADERS
-    a_head = data_manager.ANSWER_HEADERS
-    data = request.form.to_dict()
-    print(data)
-    question = data.get("question")
-    print(question)
-    new_answers = data_manager.delete_answer(answer_id)
-    return render_template(html_file, question=question, answers=new_answers, q_head=q_head, a_head=a_head)
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    data_manager.delete_answer(answer_id)
+    question, answers = data_manager.get_question_byid(int(question_id))
+    return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
 def question(question_id):
     html_file = "question_with_answers.html"
-    q_head = data_manager.QUESTION_HEADERS
-    a_head = data_manager.ANSWER_HEADERS
     question, answers = data_manager.get_question_byid(question_id)
-    if request.method == "POST":
-        data = request.form.to_dict()
-        question, answers = data_manager.render_question_or_answer(data, question, question_id)
-        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+    if request.method == 'POST' and 'photo' in request.files:
+        try:
+            filename = photos.save(request.files['photo'])
+            data = request.form.to_dict()
+            data["image"] = filename
+            question, answers = data_manager.render_question_or_answer(data, question, question_id)
+            return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
+        except:
+            data = request.form.to_dict()
+            question, answers = data_manager.render_question_or_answer(data, question, question_id)
+            return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
     return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def write_answer(question_id):
+    submission_time = data_manager.time_generator()
     if request.method == 'POST':
-        submission_time = data_manager.time_generator()
         return render_template('new_answer.html', next_id=0, question_id=question_id, submission_time=submission_time)
 
 
@@ -85,8 +92,6 @@ def update_question(question_id):
 def up_vote(question_id):
     operatorr = operator.__add__
     html_file = "question_with_answers.html"
-    q_head = data_manager.QUESTION_HEADERS
-    a_head = data_manager.ANSWER_HEADERS
     question, answers = data_manager.get_question_byid(question_id)
     data = request.form.to_dict()
     if "question" in data.keys():
@@ -101,8 +106,6 @@ def up_vote(question_id):
 def down_vote(question_id):
     operatorr = operator.__sub__
     html_file = "question_with_answers.html"
-    q_head = data_manager.QUESTION_HEADERS
-    a_head = data_manager.ANSWER_HEADERS
     question, answers = data_manager.get_question_byid(question_id)
     data = request.form.to_dict()
     if "question" in data.keys():

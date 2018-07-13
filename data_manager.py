@@ -27,6 +27,12 @@ def get_question_byid(q_id):
     return question, answers
 
 
+def get_question_id_by_answer_id(answer_id):
+    answer_table = get_all_answer()
+    question_id = [answer['question_id'] for answer in answer_table if answer['id'] == answer_id][0]
+    return question_id
+
+
 def new_answer(answer):
     answer_table = get_all_answer()
     for answers in answer_table:
@@ -129,6 +135,6 @@ def vote(question_id, data, button_data, operatorr):
         for i, row in enumerate(data):
             if row['question_id'] == str(question_id) and row['id'] == button_data.get("answer"):
                 row['vote_number'] = str(operatorr(int(row['vote_number']), 1))
-                updated_answers = [row if i == ind else answer for ind, answer in enumerate(answer_table)]
+                updated_answers = [row if row['id'] == answer['id'] else answer for answer in answer_table]
                 put_new_data_to_file('sample_data/answer.csv', updated_answers, ANSWER_HEADERS)
     return data

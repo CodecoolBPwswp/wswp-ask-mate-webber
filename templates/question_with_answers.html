@@ -66,7 +66,7 @@ tr:nth-child(even) {
             </form>
         {% elif key == "submission_time" %}
             <th width="10%"> Submission time </th>
-            <td width="80%"> {{ question[key]|ctime }} </td>
+            <th width="80%"> {{ question[key]|ctime }} </th>
         {% elif key == "view_number" %}
             <th width="10%">Views</th>
             <td width="80%"> {{ question[key] }} </td>
@@ -76,7 +76,12 @@ tr:nth-child(even) {
         {% elif key == "message" %}
             <th width="10%">Description</th>
             <td width="80%"> {{ question[key] }} </td>
-       {% endif %}
+        {% elif key == "image" %}
+            {% if question[key] != '' %}
+            <th width="10%"> Image </th>
+            <td width="80%"> <img src="http://127.0.0.1:5000/static/images/{{ question[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
+            {% endif %}
+        {% endif %}
        </tr>
     {% endfor %}
     </table>
@@ -100,9 +105,13 @@ tr:nth-child(even) {
                 </form>
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
-                <td width="80%"> {{ answer[key]|ctime }} </td>
+                <th width="80%"> {{ answer[key]|ctime }} </th>
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
-
+            {% elif key == "image" %}
+                {% if answer[key] != '' %}
+                <th width="10%"> Image </th>
+                <td width="80%"> <img src="http://127.0.0.1:5000/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
+                {% endif %}
             {% endif %}
         </tr>
         {% endfor %}
