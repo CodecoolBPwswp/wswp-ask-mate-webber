@@ -88,23 +88,9 @@ def update_question(question_id):
         return redirect('/list')
 
 
-@app.route('/question/<int:question_id>/vote-up', methods=["POST"])
-def up_vote(question_id):
-    operatorr = operator.__add__
-    html_file = "question_with_answers.html"
-    question, answers = data_manager.get_question_byid(question_id)
-    data = request.form.to_dict()
-    if "question" in data.keys():
-        question = data_manager.vote(question_id, question, data, operatorr)
-        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
-    elif "answer" in data.keys():
-        answers = data_manager.vote(question_id, answers, data, operatorr)
-        return render_template(html_file, question=question, answers=answers, q_head=q_head, a_head=a_head)
-
-
-@app.route('/question/<int:question_id>/vote-down', methods=["POST"])
-def down_vote(question_id):
-    operatorr = operator.__sub__
+@app.route('/question/<int:question_id>/vote-<dir>', methods=["POST"])
+def voter(question_id, dir):
+    operatorr = operator.__add__ if dir == "up" else operator.__sub__
     html_file = "question_with_answers.html"
     question, answers = data_manager.get_question_byid(question_id)
     data = request.form.to_dict()
