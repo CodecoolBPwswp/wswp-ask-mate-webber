@@ -62,18 +62,18 @@ def delete_answer(cursor, answer_id):
 @database_common.connection_handler
 def update_question_table(cursor, new_data, question_id):
     cursor.execute("""UPDATE question 
-                   SET submission_time = new_data[submission_time], view_number = new_data[view_number], vote_number = new_data[vote_number], title = new_data[title], message = new_data[message], image = new_data[image]"
-                   WHERE id=%s""", (question_id))
+                   SET submission_time = %s, view_number = %s, vote_number = %s, title = %s, message = %s, image = %s
+                   WHERE id=%s""", (new_data['submission_time'], new_data['view_number'], new_data['vote_number'], new_data['title'], new_data['message'], new_data['image'], question_id))
 
 
 @database_common.connection_handler
 def new_answer(cursor, answer):
     cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                    VALUES(%s, %s, %s, %s, %s)""", (answer[submission_time], answer[vote_number], answer[question_id], answer[message], answer[image]))
+                    VALUES(%s, %s, %s, %s, %s)""", (answer['submission_time'], answer['vote_number'], answer['question_id'], answer['message'], answer['image']))
 
 
 @database_common.connection_handler
 def new_question(cursor, question):
     cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
                         VALUES(%s, %s, %s, %s, %s, %s)""",
-                   (question[submission_time], question[view_number], question[vote_number], question[title], question[message], question[image]))
+                   (question['submission_time'], question['view_number'], question['vote_number'], question['title'], question['message'], question['image']))
