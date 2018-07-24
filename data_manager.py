@@ -57,3 +57,12 @@ def delete(cursor, question_id):
 @database_common.connection_handler
 def delete_answer(cursor, answer_id):
     cursor.execute("DELETE FROM answer WHERE question_id=%s", (answer_id,))
+
+@database_common.connection_handler
+def update_question_table(cursor, new_data, question_id):
+    cursor.execute("""UPDATE question 
+                   SET submission_time = new_data[submission_time], view_number = new_data[view_number], vote_number = new_data[vote_number], title = new_data[title], message = new_data[message], image = new_data[image]"
+                   WHERE id=%s""", (question_id))
+
+
+
