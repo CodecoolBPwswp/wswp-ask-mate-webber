@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 import data_manager
 import operator
@@ -14,8 +14,8 @@ photos = UploadSet('photos', IMAGES)
 app.config['UPLOADED_PHOTOS_DEST'] = "static/images"
 configure_uploads(app, photos)
 
-q_head = data_manager.QUESTION_HEADERS
-a_head = data_manager.ANSWER_HEADERS
+#q_head = data_manager.QUESTION_HEADERS
+#a_head = data_manager.ANSWER_HEADERS
 
 
 @app.route('/')
