@@ -22,7 +22,7 @@ configure_uploads(app, photos)
 @app.route('/list')
 def index():
     command = request.args.to_dict()
-    questions = data_manager.get_all_questions()
+    questions = data_manager.get_all_questions_start_with_latest()
     if command and command['order_direction'] == 'desc':
         questions = sorted(questions, key=itemgetter(command['order_by']), reverse=True)
     elif command and command['order_direction'] == 'asc':

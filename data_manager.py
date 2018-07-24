@@ -2,8 +2,8 @@ import database_common
 
 
 @database_common.connection_handler
-def get_all_questions(cursor):
-    cursor.execute("SELECT * FROM question")
+def get_all_questions_start_with_latest(cursor):
+    cursor.execute("SELECT * FROM question ORDER BY submission_time DESC")
     question_table = cursor.fetchall()
 
     return question_table
