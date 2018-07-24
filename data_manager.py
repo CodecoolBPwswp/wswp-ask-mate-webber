@@ -1,4 +1,5 @@
 import connection
+import os
 import time
 
 
@@ -52,6 +53,11 @@ def new_question(question):
 def delete(question_id):
     question_table = get_all_questions()
     answer_table = get_all_answer()
+
+    images_from_answers = [answer['image'] for answer in answer_table if answer['question_id'] == question_id]
+    for image in images_from_answers:
+        os.remove(os.path.join('static/images', image))
+
     answer_table = [answer for answer in answer_table if answer['question_id'] != question_id]
     question_table = [question for question in question_table if question['id'] != question_id]
 
