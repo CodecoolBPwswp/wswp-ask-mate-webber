@@ -36,7 +36,8 @@ tr:nth-child(even) {
 .upbutton:hover {
     background-color: #358063;
 }
-                .downbutton {
+
+.downbutton {
     background-color: red;
     border: none;
     color: white;
@@ -44,6 +45,9 @@ tr:nth-child(even) {
     text-align: center;
     font-size: 12px;
     cursor: pointer;
+}
+
+.question{
 
 }
 
@@ -53,38 +57,25 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-    <h2>Question:</h2>
-    <table width="50%" border="1">
-    {% for key in q_head %}
-       <tr>
-        {% if key == "vote_number" %}
-            <th width="10%"> Vote Number</th>
-            <td width="80%"> {{ question[key] }} </td>
-            <form>
-            <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
-                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
-            </form>
-        {% elif key == "submission_time" %}
-            <th width="10%"> Submission time </th>
-            <th width="80%"> {{ question[key]|ctime }} </th>
-        {% elif key == "view_number" %}
-            <th width="10%">Views</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "title" %}
-            <th width="10%">Question</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "message" %}
-            <th width="10%">Description</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "image" %}
-            {% if question[key] != '' %}
-            <th width="10%"> Image </th>
-            <td width="80%"> <img src="http://127.0.0.1:5000/static/images/{{ question[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
-            {% endif %}
+    <div class="question">
+        <h2>Question:</h2>
+        <p> Vote Number: {{ question['vote_number'] }}</p>
+        <form>
+        <p><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></p>
+            <p><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></p>
+        </form>
+        <p> Submission time: {{ question["submission_time"]|ctime }} </p>
+
+        <p>Views: {{ question["view_number"] }}</p>
+        <p>Question</p>
+        <p> {{ question["title"] }} </p>
+        <p>Description</p>
+        <p> {{ question["message"] }} </p>
+        {% if question['image'] != '' %}
+        <p> Image </p>
+        <p><img src="/static/images/{{ question['image'] }}" alt="picture_if_provi" width="200" height="200" /></p>
         {% endif %}
-       </tr>
-    {% endfor %}
-    </table>
+    </div>
     <br>
 
     <h2>Answers:</h2>
@@ -99,18 +90,18 @@ tr:nth-child(even) {
                 <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
                 <form>
-                <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
+                <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE UP</button></td>
                     <br>
-                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
+                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}">VOTE DOWN</button></td>
                 </form>
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
                 <th width="80%"> {{ answer[key]|ctime }} </th>
-                <form><td width="10"><button type="submit" formaction="/answer/{{ answer["id"] }}/delete" formmethod="POST" name="question" value="{{ question }}">DELETE ANSWER</button></td></form>
+                <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/delete" formmethod="GET" name="image" value="{{ answer['image'] }}">DELETE ANSWER</button></td></form>
             {% elif key == "image" %}
                 {% if answer[key] != '' %}
                 <th width="10%"> Image </th>
-                <td width="80%"> <img src="http://127.0.0.1:5000/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
+                <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
                 {% endif %}
             {% endif %}
         </tr>
@@ -130,7 +121,7 @@ tr:nth-child(even) {
         </button>
     </form>
     <form action="/question/{{ question['id'] }}/delete" >
-        <button type="submit">
+        <button type="submit" name="image" value="{{ question['image']}}">
             DELETE QUESTION
         </button>
     </form>
