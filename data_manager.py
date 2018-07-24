@@ -1,5 +1,7 @@
 import database_common
 import datetime
+import os
+
 
 def time_generator():
     dt = datetime.now()
@@ -38,3 +40,20 @@ def get_question_id_by_answer_id(cursor, answer_id):
     question_id = cursor.fetchall()
 
     return question_id
+
+
+@database_common.connection_handler
+def delete(cursor, question_id):
+    cursor.execute("SELECT image FROM answer WHERE question_id=%s", (question_id,))
+    images_from_answers = cursor.fetchall()
+    images_from_answers = list(images_from_answers.values())
+    for image in images_from_answers:
+        os.remove(os.path.join('static/images', image))
+
+    cursor.execute("DELETE FROM answer WHERE question_id=%s", (question_id,))
+    cursor.execute("DELETE FROM question WHERE id=%s", (question_id,))
+
+
+@database_common.connection_handler
+def delete_answer(cursor, answer_id):
+    cursor.execute("DELETE FROM answer WHERE question_id=%s", (answer_id,))
