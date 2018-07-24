@@ -65,6 +65,11 @@ def update_question_table(cursor, new_data, question_id):
                    WHERE id=%s""", (question_id))
 
 
+@database_common.connection_handler
+def new_answer(cursor, answer):
+    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+                    VALUES(%s, %s, %s, %s, %s)""", (answer['submission_time'], answer['vote_number'], answer['question_id'], answer['message'], answer['image']))
+
 def render_question_or_answer(data, question, question_id):
     if "question_id" in data:
         updated_answers = new_answer(data)
@@ -75,6 +80,12 @@ def render_question_or_answer(data, question, question_id):
         answers = get_question_byid(question_id)[1]
         return data, answers
 
+
+@database_common.connection_handler
+def new_question(cursor, question):
+    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                        VALUES(%s, %s, %s, %s, %s, %s)""",
+                   (question['submission_time'], question['view_number'], question['vote_number'], question['title'], question['message'], question['image']))
 
 @database_common.connection_handler
 def vote(cursor,question_id, data, button_data, operatorr):
