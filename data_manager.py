@@ -1,5 +1,9 @@
 import database_common
+import datetime
 
+def time_generator():
+    dt = datetime.now()
+    return dt
 
 @database_common.connection_handler
 def get_all_questions_start_with_latest(cursor):
@@ -15,3 +19,22 @@ def get_all_answer(cursor):
     answer_table = cursor.fetchall()
 
     return answer_table
+
+
+@database_common.connection_handler
+def get_question_byid(cursor, q_id):
+    cursor.execute("SELECT * FROM question WHERE id=%s", (q_id,))
+    question = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM answer WHERE question_id=%s", (q_id,))
+    answers = cursor.fetchall()
+
+    return question,answers
+
+
+@database_common.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    cursor.execute("SELECT question_id FROM answer WHERE id=%s", (answer_id,))
+    question_id = cursor.fetchall()
+
+    return question_id
