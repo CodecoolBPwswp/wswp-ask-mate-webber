@@ -58,6 +58,7 @@ def delete(cursor, question_id):
 def delete_answer(cursor, answer_id):
     cursor.execute("DELETE FROM answer WHERE question_id=%s", (answer_id,))
 
+
 @database_common.connection_handler
 def update_question_table(cursor, new_data, question_id):
     cursor.execute("""UPDATE question 
@@ -65,4 +66,14 @@ def update_question_table(cursor, new_data, question_id):
                    WHERE id=%s""", (question_id))
 
 
+@database_common.connection_handler
+def new_answer(cursor, answer):
+    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+                    VALUES(%s, %s, %s, %s, %s)""", (answer[submission_time], answer[vote_number], answer[question_id], answer[message], answer[image]))
 
+
+@database_common.connection_handler
+def new_question(cursor, question):
+    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                        VALUES(%s, %s, %s, %s, %s, %s)""",
+                   (question[submission_time], question[view_number], question[vote_number], question[title], question[message], question[image]))
