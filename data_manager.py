@@ -38,3 +38,12 @@ def get_question_id_by_answer_id(cursor, answer_id):
     question_id = cursor.fetchall()
 
     return question_id
+
+@database_common.connection_handler
+def update_question_table(cursor, new_data, question_id):
+    cursor.execute("""UPDATE question 
+                   SET submission_time = new_data[submission_time], view_number = new_data[view_number], vote_number = new_data[vote_number], title = new_data[title], message = new_data[message], image = new_data[image]"
+                   WHERE id=%s""", (question_id))
+
+
+
