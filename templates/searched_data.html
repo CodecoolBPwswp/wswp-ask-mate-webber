@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Questions</title>
+    <title>Search results</title>
      <style>
         body {
     background-color: #F0EDE5
@@ -25,9 +25,19 @@ tr:nth-child(even) {
 .searching a {
     padding: 250px, 100px;
 }
+
+h1 {
+    color: darkmagenta;
+}
+
+h2 {
+    color: darkorange;
+}
+
 </style>
 </head>
 <body>
+    <h1>Search results</h1>
     <div class="searching">
         <form action="/search">
             <input type="text" placeholder="Search..." name="q">
@@ -37,30 +47,43 @@ tr:nth-child(even) {
         </form>
     </div>
 
-    <form action="/list">
-        <select name="order_by">
-            <option value="id">ID</option>
-            <option value="submission_time" selected>Time</option>
-            <option value="title" selected>Title</option>
-        </select>
-        <select name="order_direction">
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-        </select>
-        <input type="submit" value="Order">
-    </form>
+    <h2>Result in questions:</h2>
     <table>
-        {% for question in questions %}
         <tr>
-            <td>{{ question['id'] }}.</td>
-            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+        </tr>
+        {% for result in question_result %}
+        <tr>
+            <td>{{ result[0]['view_number'] }}.</td>
+            <td>{{ result[0]['vote_number'] }}.</td>
+            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['title'] }}</a></td>
         </tr>
         {% endfor %}
     </table>
-    <form action="/add-question" method="POST">
+
+    <h2>Result in answers:</h2>
+    <table>
+        <tr>
+            <th>Vote number</th>
+            <th>Message</th>
+        </tr>
+        {% for result in answer_result %}
+        <tr>
+            <td>{{ result[0]['vote_number'] }}</td>
+            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['message'] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <br>
+    <form action="/list">
         <button type="submit">
-            ADD QUESTION
+            BACK TO QUESTIONS
         </button>
     </form>
+
 </body>
 </html>

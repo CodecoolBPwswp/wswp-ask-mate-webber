@@ -137,6 +137,20 @@ def new_comment_to_answer(answer_id):
         return redirect('question/{}'.format(question_id))
 
 
+@app.route('/search', methods=['GET'])
+def search():
+    searched_data = request.args.to_dict()
+    question_results = []
+    answer_results = []
+    found_answer_data = data_manager.find_searched_data_in_answer_db(searched_data)
+    if len(found_answer_data) != 0:
+        answer_results.append(found_answer_data)
+    found_question_data = data_manager.find_searched_data_in_question_db(searched_data)
+    if len(found_question_data) != 0:
+        question_results.append(found_question_data)
+    return render_template('searched_data.html', question_result=question_results, answer_result=answer_results)
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

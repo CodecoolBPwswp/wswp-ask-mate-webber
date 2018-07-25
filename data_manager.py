@@ -160,3 +160,17 @@ def get_comments(cursor, question_id):
         comments = a_comments + q_comments
     print(comments)
     return comments
+
+
+@database_common.connection_handler
+def find_searched_data_in_answer_db(cursor, searched_phase):
+    cursor.execute("""SELECT * FROM answer WHERE message LIKE '%{}%';""".format(searched_phase['q']))
+    answer_data = cursor.fetchall()
+    return answer_data
+
+
+@database_common.connection_handler
+def find_searched_data_in_question_db(cursor, searched_phase):
+    cursor.execute("""SELECT * FROM question WHERE title LIKE '%{}%' OR message LIKE '%{}%';""".format(searched_phase['q'], searched_phase['q']))
+    question_data = cursor.fetchall()
+    return question_data
