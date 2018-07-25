@@ -22,9 +22,21 @@ td, th {
 tr:nth-child(even) {
     background-color: #92B6D5;
 }
+.searching a {
+    padding: 250px, 100px;
+}
 </style>
 </head>
 <body>
+    <div class="searching">
+        <form action="/search">
+            <input type="text" placeholder="Search..." name="q">
+            <button title="Search"><img alt="Search ballonicon2" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Search_ballonicon2.svg/64px-Search_ballonicon2.svg.png" width="25px" height="25px"></button>
+            <br>
+            <br>
+        </form>
+    </div>
+
     <form action="/list">
         <select name="order_by">
             <option value="id">ID</option>
