@@ -53,12 +53,20 @@ def delete(cursor, question_id):
         if answer['image'] != '':
             os.remove(os.path.join('static/images', answer['image']))
 
+    cursor.execute("SELECT id FROM answer WHERE question_id=%s", (question_id,))
+    ans_id_for_delete = cursor.fetchall()
+    ans_ids = tuple([value['id'] for value in ans_id_for_delete])
+    if ans_ids:
+        cursor.execute("DELETE FROM comment WHERE answer_id IN %s", (ans_ids,))
+
+    cursor.execute("DELETE FROM comment WHERE question_id=%s", (question_id,))
     cursor.execute("DELETE FROM answer WHERE question_id=%s", (question_id,))
     cursor.execute("DELETE FROM question WHERE id=%s", (question_id,))
 
 
 @database_common.connection_handler
 def delete_answer(cursor, answer_id):
+    cursor.execute("DELETE FROM comment WHERE answer_id=%s", (answer_id,))
     cursor.execute("DELETE FROM answer WHERE id=%s", (answer_id,))
 
 
@@ -116,3 +124,39 @@ def vote(cursor, question_id, button_data, operatorr):
         data = cursor.fetchall()[0]
         data['vote_number'] = operatorr(int(data['vote_number']), 1)
         cursor.execute("UPDATE answer SET vote_number=%s WHERE id=%s AND question_id=%s ", (data['vote_number'], button_data['answer'], question_id))
+
+
+@database_common.connection_handler
+def question_comment(cursor, comment):
+    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s)    
+                    """, comment)
+
+
+@database_common.connection_handler
+def answer_comment(cursor, comment):
+    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s)    
+                    """, comment)
+
+    cursor.execute("SELECT question_id FROM answer WHERE id=%s", (comment['answer_id'],))
+    question_id = cursor.fetchall()
+    return question_id[0]['question_id']
+
+
+@database_common.connection_handler
+def get_comments(cursor, question_id):
+
+    cursor.execute("SELECT * FROM comment WHERE question_id=%s", (question_id,))
+    q_comments = cursor.fetchall()
+    comments = q_comments
+
+    cursor.execute("SELECT id FROM answer WHERE question_id=%s", (question_id,))
+    ans_id_for_comments = cursor.fetchall()
+    ans_ids = tuple([value['id'] for value in ans_id_for_comments])
+    if ans_ids:
+        cursor.execute("SELECT * FROM comment WHERE answer_id IN %s", (ans_ids,))
+        a_comments = cursor.fetchall()
+        comments = a_comments + q_comments
+    print(comments)
+    return comments

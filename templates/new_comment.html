@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<style>
+
+
+body {
+    background-color: #F0EDE5
+}
+
+table {
+    max-width:200px;
+    word-wrap:break-word;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 6px;
+}
+
+tr:nth-child(even) {
+    background-color: #92B6D5;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Add new comment | Askmate</title>
+
+</head>
+<body>
+    <h1>Add new comment to the question</h1>
+    <p>Your comment:</p>
+    <form action='/{{ 'question' if question_comment else 'answer' }}/{{ question_id if question_comment else answer_id }}/new-comment' method="POST">
+        <input id="id" name="id" type="hidden">
+        <input id="question_id" type="hidden" name="question_id" value="">
+        <input id="answer_id" type="hidden" name="answer_id" value="">
+        <input id="submission_time" type="hidden" name="submission_time" value="{{ submission_time }}">
+        <input id="edited_count" type="hidden" name="edited_count">
+        <textarea id="message" name="message" rows="10" cols="50" minlength="10"></textarea>
+        <p><button type="submit">Add your comment</button></p>
+    </form>
+
+</body>
+</html>

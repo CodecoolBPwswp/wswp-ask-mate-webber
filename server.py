@@ -75,8 +75,9 @@ def save_question():
 def question(question_id):
     html_file = "question_with_answers.html"
     question, answers = data_manager.get_question_byid(question_id)
+    comments = data_manager.get_comments(question_id)
 
-    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head)
+    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head, comments=comments)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -104,6 +105,36 @@ def voter(question_id, dir):
     data = request.form.to_dict()
     data_manager.vote(question_id, data, operatorr)
     return redirect('question/{}'.format(question_id))
+
+
+@app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
+def new_comment_to_question(question_id):
+    if request.method == 'GET':
+        question_comment = True
+        submission_time = data_manager.time_generator()
+        return render_template('new_comment.html', question_id=question_id, submission_time=submission_time, question_comment=question_comment)
+    else:
+        comment = request.form.to_dict()
+        comment["question_id"] = question_id
+        comment["answer_id"] = None
+        comment["edited_count"] = None
+        data_manager.question_comment(comment)
+        return redirect('question/{}'.format(question_id))
+
+
+@app.route('/answer/<int:answer_id>/new-comment', methods=['GET', 'POST'])
+def new_comment_to_answer(answer_id):
+    if request.method == 'GET':
+        question_comment = False
+        submission_time = data_manager.time_generator()
+        return render_template('new_comment.html', answer_id=answer_id, submission_time=submission_time, question_comment=question_comment)
+    else:
+        comment = request.form.to_dict()
+        comment["answer_id"] = answer_id
+        comment["question_id"] = None
+        comment["edited_count"] = None
+        question_id = data_manager.answer_comment(comment)
+        return redirect('question/{}'.format(question_id))
 
 
 if __name__ == '__main__':

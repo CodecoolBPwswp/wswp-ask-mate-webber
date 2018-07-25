@@ -75,6 +75,20 @@ tr:nth-child(even) {
         <p> Image </p>
         <p><img src="/static/images/{{ question['image'] }}" alt="picture_if_provi" width="200" height="200" /></p>
         {% endif %}
+        {% if comments %}
+            {%  for comment in comments %}
+                {% if comment['question_id'] != None %}
+                    <p>Comments:</p>
+                    <p>{{ comment['submission_time'] }} </p>
+                    <p>{{ comment['message'] }} </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <form action="/question/{{ question['id'] }}/new-comment" >
+        <button type="submit">
+            ADD COMMENT
+        </button>
+        </form>
     </div>
     <br>
 
@@ -103,9 +117,24 @@ tr:nth-child(even) {
                 <th width="10%"> Image </th>
                 <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
                 {% endif %}
+                {% else %}
             {% endif %}
         </tr>
         {% endfor %}
+        {% if comments %}
+            {%  for comment in comments %}
+                {% if comment['answer_id'] == answer['id'] %}
+                    <p>Comments:</p>
+                    <p>{{ comment['submission_time'] }} </p>
+                    <p>{{ comment['message'] }} </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <form action="/answer/{{ answer['id'] }}/new-comment" >
+            <button type="submit">
+                ADD COMMENT
+            </button>
+        </form>
         </table><br>
     {% endfor %}
 
