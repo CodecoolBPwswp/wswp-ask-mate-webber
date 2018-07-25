@@ -61,10 +61,10 @@ tr:nth-child(even) {
         <h2>Question:</h2>
         <p> Vote Number: {{ question['vote_number'] }}</p>
         <form>
-        <p><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></p>
-            <p><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></p>
+        <p><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="question" value="{{ question['vote_number'] }}">VOTE UP</button></p>
+            <p><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="question" value="{{ question['vote_number'] }}">VOTE DOWN</button></p>
         </form>
-        <p> Submission time: {{ question["submission_time"]|ctime }} </p>
+        <p> Submission time: {{ question["submission_time"] }} </p>
 
         <p>Views: {{ question["view_number"] }}</p>
         <p>Question</p>
@@ -96,7 +96,7 @@ tr:nth-child(even) {
                 </form>
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
-                <th width="80%"> {{ answer[key]|ctime }} </th>
+                <th width="80%"> {{ answer[key] }} </th>
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/delete" formmethod="GET" name="image" value="{{ answer['image'] }}">DELETE ANSWER</button></td></form>
             {% elif key == "image" %}
                 {% if answer[key] != '' %}
