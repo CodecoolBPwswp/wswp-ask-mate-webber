@@ -116,3 +116,17 @@ def vote(cursor, question_id, button_data, operatorr):
         data = cursor.fetchall()[0]
         data['vote_number'] = operatorr(int(data['vote_number']), 1)
         cursor.execute("UPDATE answer SET vote_number=%s WHERE id=%s AND question_id=%s ", (data['vote_number'], button_data['answer'], question_id))
+
+
+@database_common.connection_handler
+def find_searched_data_in_answer_db(cursor, searched_phase):
+    cursor.execute("""SELECT * FROM answer WHERE message LIKE '%{}%';""".format(searched_phase['q']))
+    answer_data = cursor.fetchall()
+    return answer_data
+
+
+@database_common.connection_handler
+def find_searched_data_in_question_db(cursor, searched_phase):
+    cursor.execute("""SELECT * FROM question WHERE title LIKE '%{}%' OR message LIKE '%{}%';""".format(searched_phase['q'], searched_phase['q']))
+    question_data = cursor.fetchall()
+    return question_data

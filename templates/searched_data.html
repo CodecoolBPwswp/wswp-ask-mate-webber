@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search results</title>
+     <style>
+        body {
+    background-color: #F0EDE5
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 6px;
+}
+
+tr:nth-child(even) {
+    background-color: #92B6D5;
+}
+.searching a {
+    padding: 250px, 100px;
+}
+
+h1 {
+    color: darkmagenta;
+}
+
+h2 {
+    color: darkorange;
+}
+
+</style>
+</head>
+<body>
+    <h1>Search results</h1>
+    <div class="searching">
+        <form action="/search">
+            <input type="text" placeholder="Search..." name="q">
+            <button title="Search"><img alt="Search ballonicon2" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Search_ballonicon2.svg/64px-Search_ballonicon2.svg.png" width="25px" height="25px"></button>
+            <br>
+            <br>
+        </form>
+    </div>
+
+    <h2>Result in questions:</h2>
+    <table>
+        <tr>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+        </tr>
+        {% for result in question_result %}
+        <tr>
+            <td>{{ result[0]['view_number'] }}.</td>
+            <td>{{ result[0]['vote_number'] }}.</td>
+            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['title'] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Result in answers:</h2>
+    <table>
+        <tr>
+            <th>Vote number</th>
+            <th>Message</th>
+        </tr>
+        {% for result in answer_result %}
+        <tr>
+            <td>{{ result[0]['vote_number'] }}</td>
+            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['message'] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <br>
+    <form action="/list">
+        <button type="submit">
+            BACK TO QUESTIONS
+        </button>
+    </form>
+
+</body>
+</html>
