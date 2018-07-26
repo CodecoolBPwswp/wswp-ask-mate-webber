@@ -65,6 +65,7 @@ h2 {
 </head>
 <body>
     <div class="question">
+        <h1>Question info</h1>
         <h2>Question:</h2>
         <p> Vote Number: {{ question['vote_number'] }}</p>
         <form>
@@ -109,6 +110,7 @@ h2 {
     </div>
     <br>
 
+    <div align="center">
     <h2>Answers:</h2>
     {%  for answer in answers %}
         <table width="50%" border="1">
@@ -188,5 +190,6 @@ h2 {
             BACK TO QUESTIONS
         </button>
     </form>
+    </div>
 </body>
 </html>
