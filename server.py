@@ -103,7 +103,7 @@ def update_question(question_id):
     else:
         data = request.form.to_dict()
         data_manager.update_question_table(data, data['id'])
-        return redirect('/list')
+        return redirect('/question/{}'.format(question_id))
 
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
@@ -115,7 +115,6 @@ def edit_answer(answer_id):
     else:
         data = request.form.to_dict()
         question_id = data_manager.update_answer_table(data, answer_id)
-        print(question_id)
         return redirect('/question/{}'.format(question_id['question_id']))
 
 
