@@ -145,6 +145,11 @@ h2 {
                     <p>Comments:</p>
                     <p>{{ comment['submission_time'] }} </p>
                     <p>{{ comment['message'] }} </p>
+                    <form action="/comments/{{ comment['id'] }}/edit" >
+                        <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                            EDIT COMMENT
+                        </button>
+                    </form>
                     <form action="/comments/{{ comment['id'] }}/delete" >
                         <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
                             DELETE COMMENT

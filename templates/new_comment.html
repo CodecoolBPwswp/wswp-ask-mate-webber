@@ -55,6 +55,7 @@ h2 {
     <p>Your comment:</p>
     <form action='/comments/{{ comment['id'] }}/edit' method="POST">
         <textarea id="message" name="message" rows="10" cols="50" minlength="10">{{ comment['message'] }}</textarea>
+        <input type="hidden" name="answer_id" value="{{ comment['answer_id'] }}">
         <p><button type="submit">Edit</button></p>
     </form>
 {% endif %}
