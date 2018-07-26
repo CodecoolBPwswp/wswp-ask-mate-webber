@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    {% if not update %}
     <title>Add new answer | Askmate</title>
+    {% else %}
+    <title>Edit answer | Askmate</title>
+    {%  endif %}
      <style>
 
          body {
@@ -25,9 +29,18 @@ td, th {
 tr:nth-child(even) {
     background-color: #92B6D5;
 }
+         h1 {
+    color: darkmagenta;
+}
+
+h2 {
+    color: darkorange;
+}
 </style>
 </head>
 <body>
+    {% if not update %}
+
     <h1>Add new answer to the question</h1>
     <p>Your answer:</p>
     <form action='/answer/' enctype=multipart/form-data method="POST">
@@ -40,5 +53,20 @@ tr:nth-child(even) {
         <p><input type=file name=photo>
         <p><button type="submit">Add your answer</button></p>
     </form>
+
+    {% else %}
+    <h1>Edit answer</h1>
+    <p>Your modified answer:</p>
+    <form action='/answer/{{ answer.id }}/edit' enctype=multipart/form-data method="POST">
+        <input id="submission_time" name="submission_time" type="hidden" value="{{ submission_time }}">
+        <input id="vote_number" name="vote_number" type="hidden" value="{{ answer.vote_number }}">
+        <input id="question_id" name="question_id" type="hidden" value="{{ answer.question_id }}">
+         <input id="image" name="image" type="hidden" value="{{ answer.image }}">
+        <textarea id="message" name="message" rows="10" cols="50" minlength="10">{{ answer.message }}</textarea>
+        <p><input type=file name=photo>
+        <p><button type="submit">Save your modified answer</button></p>
+    </form>
+    {% endif %}
+
 </body>
 </html>

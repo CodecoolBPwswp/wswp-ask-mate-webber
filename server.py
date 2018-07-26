@@ -55,6 +55,7 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)
     data = request.args.to_dict()
+    print(data)
     if data['image'] != '':
         os.remove(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], data['image']))
     data_manager.delete_answer(answer_id)
@@ -103,6 +104,19 @@ def update_question(question_id):
         data = request.form.to_dict()
         data_manager.update_question_table(data, data['id'])
         return redirect('/list')
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    submission_time = data_manager.time_generator()
+    if request.method == 'GET':
+        update = True
+        answer_needs_update = data_manager.answer_under_update(answer_id)
+        return render_template('new_answer.html', submission_time=submission_time, answer=answer_needs_update, update=update)
+    else:
+        data = request.form.to_dict()
+        question_id = data_manager.update_answer_table(data, answer_id)
+        print(question_id)
+        return redirect('/question/{}'.format(question_id['question_id']))
 
 
 @app.route('/question/<int:question_id>/vote-<dir>', methods=["POST"])

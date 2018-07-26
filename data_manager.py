@@ -78,11 +78,28 @@ def question_under_update(cursor, question_id):
 
 
 @database_common.connection_handler
+def answer_under_update(cursor, answer_id):
+    cursor.execute("SELECT * FROM answer WHERE id=%s", (answer_id,))
+    answer = cursor.fetchall()
+    return answer[0]
+
+
+@database_common.connection_handler
 def update_question_table(cursor, new_data, question_id):
     cursor.execute("""UPDATE question 
                    SET submission_time =%s , view_number = %s, vote_number = %s, title = %s, message = %s, image = %s
                    WHERE id=%s""", (new_data['submission_time'], new_data['view_number'], new_data['vote_number'], new_data['title'], new_data['message'], new_data['image'], question_id))
 
+
+@database_common.connection_handler
+def update_answer_table(cursor, new_data, answer_id):
+    cursor.execute("""UPDATE answer 
+                   SET submission_time =%s , vote_number = %s, question_id = %s, message = %s, image = %s
+                   WHERE id=%s""", (new_data['submission_time'], new_data['vote_number'], new_data['question_id'], new_data['message'], new_data['image'], answer_id))
+
+    cursor.execute("""SELECT question_id FROM answer WHERE id=%s""", (answer_id,))
+    question_id = cursor.fetchall()[0]
+    return question_id
 
 @database_common.connection_handler
 def new_answer(cursor, answer):
