@@ -81,6 +81,11 @@ tr:nth-child(even) {
                     <p>Comments:</p>
                     <p>{{ comment['submission_time'] }} </p>
                     <p>{{ comment['message'] }} </p>
+                    <form action="/comments/{{ comment['id'] }}/delete" >
+                        <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
+                            DELETE COMMENT
+                        </button>
+                    </form>
                 {% endif %}
             {% endfor %}
         {% endif %}
@@ -127,9 +132,15 @@ tr:nth-child(even) {
                     <p>Comments:</p>
                     <p>{{ comment['submission_time'] }} </p>
                     <p>{{ comment['message'] }} </p>
+                    <form action="/comments/{{ comment['id'] }}/delete" >
+                        <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                            DELETE COMMENT
+                        </button>
+                    </form>
                 {% endif %}
             {% endfor %}
         {% endif %}
+        <br>
         <form action="/answer/{{ answer['id'] }}/new-comment" >
             <button type="submit">
                 ADD COMMENT

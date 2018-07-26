@@ -18,6 +18,12 @@ a_head = data_manager.ANSWER_HEADERS
 
 
 @app.route('/')
+def main():
+    questions = data_manager.get_latest_five_question()
+    first = True
+    return render_template("list.html", questions=questions, first=first)
+
+
 @app.route('/list')
 def index():
     command = request.args.to_dict()
@@ -149,6 +155,17 @@ def search():
     if len(found_question_data) != 0:
         question_results.append(found_question_data)
     return render_template('searched_data.html', question_result=question_results, answer_result=answer_results)
+
+
+@app.route('/comments/<int:comment_id>/delete')
+def delete_comment(comment_id):
+    data_id = request.args.to_dict()
+    if 'question_id' in data_id.keys():
+        data_manager.delete_question_comment(comment_id)
+        return redirect('question/{}'.format(data_id['question_id']))
+    elif 'answer_id' in data_id.keys():
+        question_id = data_manager.delete_answer_comment(comment_id, data_id)
+        return redirect('question/{}'.format(question_id['question_id']))
 
 
 if __name__ == '__main__':

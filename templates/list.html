@@ -57,6 +57,12 @@ tr:nth-child(even) {
         </tr>
         {% endfor %}
     </table>
+    <br>
+    {% if first %}
+        <button><a href="/list">All question</a></button>
+    {% else %}
+        <button><a href="/">Top five question</a></button>
+    {% endif %}
     <form action="/add-question" method="POST">
         <button type="submit">
             ADD QUESTION

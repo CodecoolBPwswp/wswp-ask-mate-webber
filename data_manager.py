@@ -147,7 +147,7 @@ def answer_comment(cursor, comment):
 @database_common.connection_handler
 def get_comments(cursor, question_id):
 
-    cursor.execute("SELECT * FROM comment WHERE question_id=%s", (question_id,))
+    cursor.execute("SELECT * FROM comment WHERE question_id=%s ORDER BY submission_time DESC", (question_id,))
     q_comments = cursor.fetchall()
     comments = q_comments
 
@@ -155,10 +155,10 @@ def get_comments(cursor, question_id):
     ans_id_for_comments = cursor.fetchall()
     ans_ids = tuple([value['id'] for value in ans_id_for_comments])
     if ans_ids:
-        cursor.execute("SELECT * FROM comment WHERE answer_id IN %s", (ans_ids,))
+        cursor.execute("SELECT * FROM comment WHERE answer_id IN %s ORDER BY submission_time DESC", (ans_ids,))
         a_comments = cursor.fetchall()
         comments = a_comments + q_comments
-    print(comments)
+
     return comments
 
 
@@ -174,3 +174,26 @@ def find_searched_data_in_question_db(cursor, searched_phase):
     cursor.execute("""SELECT * FROM question WHERE title LIKE '%{}%' OR message LIKE '%{}%';""".format(searched_phase['q'], searched_phase['q']))
     question_data = cursor.fetchall()
     return question_data
+
+
+@database_common.connection_handler
+def delete_question_comment(cursor, comment_id):
+    cursor.execute("DELETE FROM comment WHERE id=%s", (comment_id,))
+
+
+@database_common.connection_handler
+def delete_answer_comment(cursor, comment_id, answer_id):
+    cursor.execute("SELECT question_id FROM answer WHERE id=%s", (answer_id['answer_id'],))
+    question_id = cursor.fetchall()[0]
+
+    cursor.execute("DELETE FROM comment WHERE id=%s ", (comment_id,))
+
+    return question_id
+
+
+@database_common.connection_handler
+def get_latest_five_question(cursor):
+    cursor.execute("SELECT * FROM question ORDER BY submission_time DESC LIMIT 5")
+    top_five = cursor.fetchall()
+
+    return top_five
