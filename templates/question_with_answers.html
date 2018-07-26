@@ -64,6 +64,7 @@ h2 {
 </style>
 </head>
 <body>
+    <div align="center">
     <h2>Question:</h2>
     <table width="50%" border="1">
     {% for key in q_head %}
@@ -78,9 +79,29 @@ h2 {
         {% elif key == "submission_time" %}
             <th width="10%"> Submission time </th>
             <th width="80%"> {{ question[key] }} </th>
+            <td><form action="/question/{{ question['id'] }}/edit">
+                <button type="submit">
+                    EDIT QUESTION
+                </button>
+            </form></td>
+            <td><form action="/question/{{ question['id'] }}/delete" >
+                <button type="submit" name="image" value="{{ question['image']}}">
+                    DELETE QUESTION
+                </button>
+            </form></td>
         {% elif key == "view_number" %}
             <th width="10%">Views</th>
             <td width="80%"> {{ question[key] }} </td>
+            <td><form action="/question/{{ question['id'] }}/new-comment" >
+                <button type="submit">
+                    ADD COMMENT
+                </button>
+            </form></td>
+            <td><form action="/question/{{ question['id'] }}/new-answer"  method="POST">
+                <button type="submit">
+                    ADD ANSWER
+                </button>
+            </form></td>
         {% elif key == "title" %}
             <th width="10%">Question</th>
             <td width="80%"> {{ question[key] }} </td>
@@ -88,9 +109,9 @@ h2 {
             <th width="10%">Description</th>
             <td width="80%"> {{ question[key] }} </td>
         {% elif key == "image" %}
-            {% if question[key] != '' %}
+            {% if question[key] %}
             <th width="10%"> Image </th>
-            <td width="80%"> <img src="/static/images/{{ question['image'] }}" alt="picture_if_provi" width="200" height="200" /> </td>
+            <td width="80%"> <img src="/static/images/{{ question['image'] }}" alt=" " width="200" height="200" /> </td>
             {% endif %}
         {% endif %}
 
@@ -115,14 +136,11 @@ h2 {
                 {% endif %}
             {% endfor %}
         {% endif %}
-        <form action="/question/{{ question['id'] }}/new-comment" >
-        <button type="submit">
-            ADD COMMENT
-        </button>
-        </form>
     </table>
+    </div>
     <br>
 
+    {% if answers %}
     <div align="center">
     <h2>Answers:</h2>
     {%  for answer in answers %}
@@ -146,9 +164,9 @@ h2 {
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/edit" formmethod="GET">EDIT ANSWER</button></td></form>
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/delete" formmethod="GET" name="image" value="{{ answer['image'] }}">DELETE ANSWER</button></td></form>
             {% elif key == "image" %}
-                {% if answer[key] != '' or answer[key] != None %}
+                {% if answer[key] %}
                 <th width="10%"> Image </th>
-                <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
+                <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt=" " width="200" height="200" /> </td>
                 {% endif %}
                 {% else %}
             {% endif %}
@@ -183,26 +201,13 @@ h2 {
     {% endfor %}
 
     <br>
-    <form action="/question/{{ question['id'] }}/new-answer"  method="POST">
-        <button type="submit">
-            ADD ANSWER
-        </button>
-    </form>
-    <form action="/question/{{ question['id'] }}/edit">
-        <button type="submit">
-            EDIT QUESTION
-        </button>
-    </form>
-    <form action="/question/{{ question['id'] }}/delete" >
-        <button type="submit" name="image" value="{{ question['image']}}">
-            DELETE QUESTION
-        </button>
-    </form>
+
     <form action="/list">
         <button type="submit">
             BACK TO QUESTIONS
         </button>
     </form>
     </div>
+    {% endif %}
 </body>
 </html>
