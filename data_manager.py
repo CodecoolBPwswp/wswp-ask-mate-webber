@@ -8,7 +8,8 @@ ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "messag
 
 
 def time_generator():
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     return dt
 
 @database_common.connection_handler
