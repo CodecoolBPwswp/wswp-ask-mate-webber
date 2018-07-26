@@ -60,12 +60,15 @@ tr:nth-child(even) {
 
 h2 {
     color: darkorange;
+    position: relative;
+    left: 150px;
 }
 </style>
 </head>
 <body>
     <div align="center">
-    <h2>Question:</h2>
+    <h1>Details of question</h1>
+    <h2 align="left">Question:</h2>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
@@ -136,13 +139,18 @@ h2 {
                 {% endif %}
             {% endfor %}
         {% endif %}
+        <form action="/question/{{ question['id'] }}/new-comment" >
+        <button type="submit">
+            ADD COMMENT
+        </button>
+        </form>
     </table>
     </div>
     <br>
 
     {% if answers %}
     <div align="center">
-    <h2>Answers:</h2>
+    <h2 align="left">Answers:</h2>
     {%  for answer in answers %}
         <table width="50%" border="1">
         {% for key in a_head %}
