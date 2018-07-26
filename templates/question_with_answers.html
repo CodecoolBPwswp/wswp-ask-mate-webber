@@ -54,6 +54,13 @@ tr:nth-child(even) {
 .downbutton:hover {
     background-color: #ff2a40;
 }
+        h1 {
+    color: darkmagenta;
+}
+
+h2 {
+    color: darkorange;
+}
 </style>
 </head>
 <body>
@@ -116,9 +123,10 @@ tr:nth-child(even) {
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
                 <th width="80%"> {{ answer[key] }} </th>
+                <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/edit" formmethod="GET">EDIT ANSWER</button></td></form>
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/delete" formmethod="GET" name="image" value="{{ answer['image'] }}">DELETE ANSWER</button></td></form>
             {% elif key == "image" %}
-                {% if answer[key] != '' %}
+                {% if answer[key] != '' or answer[key] != None %}
                 <th width="10%"> Image </th>
                 <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt="picture_if_provi" width="200" height="200" /> </td>
                 {% endif %}
