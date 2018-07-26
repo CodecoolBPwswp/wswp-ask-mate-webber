@@ -64,39 +64,26 @@ h2 {
 </style>
 </head>
 <body>
-    <h2>Question:</h2>
-    <table width="50%" border="1">
-    {% for key in q_head %}
-       <tr>
-        {% if key == "vote_number" %}
-            <th width="10%"> Vote Number</th>
-            <td width="80%"> {{ question[key] }} </td>
-            <form>
-            <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question">VOTE UP</button></td>
-                <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" >VOTE DOWN</button></td>
-            </form>
-        {% elif key == "submission_time" %}
-            <th width="10%"> Submission time </th>
-            <th width="80%"> {{ question[key] }} </th>
-        {% elif key == "view_number" %}
-            <th width="10%">Views</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "title" %}
-            <th width="10%">Question</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "message" %}
-            <th width="10%">Description</th>
-            <td width="80%"> {{ question[key] }} </td>
-        {% elif key == "image" %}
-            {% if question[key] != '' %}
-            <th width="10%"> Image </th>
-            <td width="80%"> <img src="/static/images/{{ question['image'] }}" alt="picture_if_provi" width="200" height="200" /> </td>
-            {% endif %}
-        {% endif %}
+    <div class="question">
+        <h1>Question info</h1>
+        <h2>Question:</h2>
+        <p> Vote Number: {{ question['vote_number'] }}</p>
+        <form>
+        <p><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="question" value="{{ question['vote_number'] }}">VOTE UP</button></p>
+            <p><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="question" value="{{ question['vote_number'] }}">VOTE DOWN</button></p>
+        </form>
+        <p> Submission time: {{ question["submission_time"] }} </p>
 
-       </tr>
-    {% endfor %}
-    {% if comments %}
+        <p>Views: {{ question["view_number"] }}</p>
+        <p>Question</p>
+        <p> {{ question["title"] }} </p>
+        <p>Description</p>
+        <p> {{ question["message"] }} </p>
+        {% if question['image'] != '' %}
+        <p> Image </p>
+        <p><img src="/static/images/{{ question['image'] }}" alt="picture_if_provi" width="200" height="200" /></p>
+        {% endif %}
+        {% if comments %}
             {%  for comment in comments %}
                 {% if comment['question_id'] != None %}
                     <p>Comments:</p>
@@ -120,7 +107,7 @@ h2 {
             ADD COMMENT
         </button>
         </form>
-    </table>
+    </div>
     <br>
 
     <div align="center">
