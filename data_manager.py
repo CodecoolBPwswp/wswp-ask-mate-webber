@@ -197,3 +197,23 @@ def get_latest_five_question(cursor):
     top_five = cursor.fetchall()
 
     return top_five
+
+@database_common.connection_handler
+def get_comment_by_id(cursor, comment_id):
+    cursor.execute("SELECT * FROM comment WHERE id=%s", (comment_id,))
+    comment = cursor.fetchall()
+
+    return comment
+
+
+@database_common.connection_handler
+def update_question_comment_by_id(cursor, comment_message, comment_id):
+    cursor.execute("UPDATE comment SET message = %s WHERE id=%s", (comment_message['message'], comment_id))
+
+    cursor.execute("SELECT question_id FROM comment WHERE id=%s", (comment_id,))
+
+    question_id = cursor.fetchall()[0]
+
+    return question_id
+
+

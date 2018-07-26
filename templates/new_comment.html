@@ -31,7 +31,8 @@ tr:nth-child(even) {
 
 </head>
 <body>
-    <h1>Add new comment to the question</h1>
+{% if not comment_update %}
+    <h1>Add new comment to the {{ 'question' if question_comment else 'answer' }}</h1>
     <p>Your comment:</p>
     <form action='/{{ 'question' if question_comment else 'answer' }}/{{ question_id if question_comment else answer_id }}/new-comment' method="POST">
         <input id="id" name="id" type="hidden">
@@ -42,6 +43,13 @@ tr:nth-child(even) {
         <textarea id="message" name="message" rows="10" cols="50" minlength="10"></textarea>
         <p><button type="submit">Add your comment</button></p>
     </form>
-
+{% else %}
+        <h1>Edit {{ 'question' if question_comment else 'answer' }} comment</h1>
+    <p>Your comment:</p>
+    <form action='/comments/{{ comment['id'] }}/edit' method="POST">
+        <textarea id="message" name="message" rows="10" cols="50" minlength="10">{{ comment['message'] }}</textarea>
+        <p><button type="submit">Edit</button></p>
+    </form>
+{% endif %}
 </body>
 </html>
