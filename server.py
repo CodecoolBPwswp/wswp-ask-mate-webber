@@ -55,7 +55,7 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)
     data = request.args.to_dict()
-    print(data)
+
     if data['image'] != '':
         os.remove(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], data['image']))
     data_manager.delete_answer(answer_id)
@@ -83,8 +83,9 @@ def question(question_id):
     html_file = "question_with_answers.html"
     question, answers = data_manager.get_question_byid(question_id)
     comments = data_manager.get_comments(question_id)
+    tags = data_manager.get_tags(question_id)
 
-    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head, comments=comments)
+    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head, comments=comments, tags=tags)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -159,15 +160,15 @@ def new_comment_to_answer(answer_id):
 @app.route('/search', methods=['GET'])
 def search():
     searched_data = request.args.to_dict()
-    question_results = []
-    answer_results = []
+    #question_results = []
+    #answer_results = []
     found_answer_data = data_manager.find_searched_data_in_answer_db(searched_data)
-    if len(found_answer_data) != 0:
-        answer_results.append(found_answer_data)
+    #if len(found_answer_data) != 0:
+        #answer_results.append(found_answer_data)
     found_question_data = data_manager.find_searched_data_in_question_db(searched_data)
-    if len(found_question_data) != 0:
-        question_results.append(found_question_data)
-    return render_template('searched_data.html', question_result=question_results, answer_result=answer_results)
+    #if len(found_question_data) != 0:
+        #question_results.append(found_question_data)
+    return render_template('searched_data.html', question_result=found_question_data, answer_result=found_answer_data)
 
 
 @app.route('/comments/<int:comment_id>/delete')
@@ -198,6 +199,35 @@ def edit_question_comment(comment_id):
         question_id = data_manager.update_question_comment_by_id(comment, comment_id)
 
         return redirect('question/{}'.format(question_id['question_id']))
+
+
+@app.route('/question/<int:question_id>/new-tag', methods=['GET', 'POST'])
+def new_tag(question_id):
+    if request.method == 'GET':
+        possible_tags = data_manager.possible_tags(question_id)
+        return render_template("tag.html", possible_tags=possible_tags, question_id=question_id)
+
+    else:
+        new_tags = request.form.to_dict()
+        if new_tags['input_tag'] == '' and new_tags['new_tag'] == '':
+            return redirect('question/{}'.format(new_tags['question_id']))
+
+        elif new_tags['input_tag'] and new_tags['new_tag'] == '':
+            data_manager.new_input_tag(new_tags['input_tag'], question_id)
+
+        elif new_tags['input_tag'] == '' and new_tags['new_tag']:
+            data_manager.new_available_tag(new_tags, question_id)
+
+        else:
+            data_manager.new_input_tag(new_tags['input_tag'], question_id)
+            data_manager.new_available_tag(new_tags, question_id)
+        return redirect('question/{}'.format(new_tags['question_id']))
+
+
+@app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
+def delete_tag(question_id, tag_id):
+    data_manager.delete_tag(question_id, tag_id)
+    return redirect('question/{}'.format(question_id))
 
 
 if __name__ == '__main__':

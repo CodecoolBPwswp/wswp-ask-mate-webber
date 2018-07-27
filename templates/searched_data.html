@@ -35,6 +35,11 @@ h2 {
     color: darkorange;
 }
 
+mark {
+    background-color: yellow;
+    color: black;
+}
+
 </style>
 </head>
 <body>
@@ -47,37 +52,43 @@ h2 {
             <br>
         </form>
     </div>
-
+    {% if question_result %}
     <h2>Result in questions:</h2>
     <table>
         <tr>
+            <th>ID</th>
             <th>View number</th>
             <th>Vote number</th>
             <th>Title</th>
         </tr>
         {% for result in question_result %}
         <tr>
-            <td>{{ result[0]['view_number'] }}.</td>
-            <td>{{ result[0]['vote_number'] }}.</td>
-            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['title'] }}</a></td>
+            <td>{{ result['id'] }}</td>
+            <td>{{ result['view_number'] }}.</td>
+            <td>{{ result['vote_number'] }}.</td>
+            <td><a href="/question/{{ result['id'] }}">{{ result['title']|safe }}</a></td>
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
 
+    {% if answer_result %}
     <h2>Result in answers:</h2>
     <table>
         <tr>
+            <th>Question ID</th>
             <th>Vote number</th>
             <th>Message</th>
         </tr>
         {% for result in answer_result %}
         <tr>
-            <td>{{ result[0]['vote_number'] }}</td>
-            <td><a href="/question/{{ result[0]['id'] }}">{{ result[0]['message'] }}</a></td>
+            <td>{{ result['question_id'] }}</td>
+            <td>{{ result['vote_number'] }}</td>
+            <td><a href="/question/{{ result['question_id'] }}">{{ result['message']|safe }}</a></td>
         </tr>
         {% endfor %}
     </table>
-
+    {% endif %}
     <br>
     <br>
     <form action="/list">

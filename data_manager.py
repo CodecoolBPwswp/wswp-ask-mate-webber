@@ -3,8 +3,8 @@ import datetime
 import os
 
 
-QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image", "comment"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image", "comment"]
 
 
 def time_generator():
@@ -30,6 +30,8 @@ def get_all_answer(cursor):
 
 @database_common.connection_handler
 def get_question_byid(cursor, q_id):
+    #cursor.execute("UPDATE question SET view_number=view_number+1 WHERE id=%s", (q_id,))
+
     cursor.execute("SELECT * FROM question WHERE id=%s", (q_id,))
     question = cursor.fetchall()
 
@@ -184,6 +186,8 @@ def get_comments(cursor, question_id):
 def find_searched_data_in_answer_db(cursor, searched_phase):
     cursor.execute("""SELECT * FROM answer WHERE message LIKE '%{}%';""".format(searched_phase['q']))
     answer_data = cursor.fetchall()
+    for data in answer_data:
+        data['message'] = data['message'].replace(searched_phase['q'], "<mark>{}</mark>".format(searched_phase['q']))
     return answer_data
 
 
@@ -191,6 +195,9 @@ def find_searched_data_in_answer_db(cursor, searched_phase):
 def find_searched_data_in_question_db(cursor, searched_phase):
     cursor.execute("""SELECT * FROM question WHERE title LIKE '%{}%' OR message LIKE '%{}%';""".format(searched_phase['q'], searched_phase['q']))
     question_data = cursor.fetchall()
+    for data in question_data:
+        data['title'] = data['title'].replace(searched_phase['q'], "<mark>{}</mark>".format(searched_phase['q']))
+        data['message'] = data['message'].replace(searched_phase['q'], "<mark>{}</mark>".format(searched_phase['q']))
     return question_data
 
 
@@ -239,3 +246,51 @@ def update_question_comment_by_id(cursor, comment, comment_id):
         question_id = cursor.fetchall()[0]
 
     return question_id
+
+@database_common.connection_handler
+def get_tags(cursor, question_id):
+    tags_to_return = []
+    cursor.execute("SELECT tag_id FROM question_tag WHERE question_id=%s", (question_id,))
+    tags = cursor.fetchall()
+    tag_ids = tuple([value['tag_id'] for value in tags])
+    if tag_ids:
+        cursor.execute("SELECT * FROM tag WHERE id in %s", (tag_ids,))
+        tags_to_return = cursor.fetchall()
+
+    return tags_to_return
+
+
+@database_common.connection_handler
+def possible_tags(cursor, question_id):
+    cursor.execute("SELECT tag_id FROM question_tag WHERE question_id=%s", (question_id,))
+    tags = cursor.fetchall()
+    tag_ids = tuple([value['tag_id'] for value in tags])
+    if tag_ids:
+        cursor.execute("SELECT name FROM tag WHERE id NOT IN %s", (tag_ids,))
+        tags_to_return = cursor.fetchall()
+    else:
+        cursor.execute("SELECT name FROM tag")
+        tags_to_return = cursor.fetchall()
+
+    return tags_to_return
+
+
+@database_common.connection_handler
+def new_input_tag(cursor, tag, question_id):
+    cursor.execute("INSERT INTO tag (name) VALUES (%s)", (tag,))
+    cursor.execute("SELECT * FROM tag ORDER BY ID DESC LIMIT 1")
+    tag_id = cursor.fetchall()[0]
+
+    cursor.execute("INSERT INTO question_tag (question_id, tag_id) VALUES (%s, %s)", (question_id, tag_id['id']))
+
+
+@database_common.connection_handler
+def new_available_tag(cursor, tag, question_id):
+    cursor.execute("SELECT id FROM tag WHERE name=%s", (tag["new_tag"],))
+    tag_id = cursor.fetchall()[0]
+    cursor.execute("INSERT INTO question_tag (question_id, tag_id) VALUES (%s, %s)", (question_id, tag_id['id']))
+
+
+@database_common.connection_handler
+def delete_tag(cursor, question_id, tag_id):
+    cursor.execute("DELETE FROM question_tag WHERE question_id=%s and tag_id=%s", (question_id, tag_id))

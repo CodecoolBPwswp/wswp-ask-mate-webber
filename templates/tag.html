@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: #F0EDE5;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>New Tag</title>
+</head>
+<body>
+<h2>New tag</h2>
+<br>
+    <form action="/question/{{ question_id }}/new-tag" method="POST" >
+        <select name="new_tag">
+         <option selected></option>
+            {% for tag in possible_tags %}
+                <option value="{{ tag['name'] }}" >{{ tag['name'] }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="input_tag" value="{{ input_tag }}">
+        <input type="hidden" name="question_id" value="{{ question_id }}">
+        <input type="submit" value="Add tag">
+    </form>
+</body>
+</html>

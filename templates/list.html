@@ -46,9 +46,10 @@ h2 {
 
     <form action="/list">
         <select name="order_by">
-            <option value="id">ID</option>
             <option value="submission_time" selected>Time</option>
-            <option value="title" selected>Title</option>
+            <option value="title" >Title</option>
+            <option value="vote_number">Vote number</option>
+            <option value="view_number" >View number</option>
         </select>
         <select name="order_direction">
             <option value="desc">Descending</option>
@@ -57,10 +58,16 @@ h2 {
         <input type="submit" value="Order">
     </form>
     <table>
+        <th>Submisson time</th>
+        <th>Vote number</th>
+        <th>View number</th>
+        <th>Title</th>
         {% for question in questions %}
         <tr>
-            <td>{{ question['id'] }}.</td>
-            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+            <td>{{ question['submission_time'] }}</td>
+            <td>{{ question['vote_number'] }}</td>
+            <td>{{ question['view_number'] }}</td>
+            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }} </a></td>
         </tr>
         {% endfor %}
     </table>

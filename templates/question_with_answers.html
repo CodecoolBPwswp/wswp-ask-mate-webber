@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <title>AskMate | Forum</title>
     <style>
-        body {
+
+
+body {
     background-color: #F0EDE5
 }
+
+
 table {
     table-layout: auto;
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 80%;
+    {#border-radius: 25px;#}
 }
 
 td, th {
@@ -20,10 +25,13 @@ td, th {
     padding: 6px;
 }
 
+
 tr:nth-child(even) {
     background-color: #92B6D5;
 }
-        .upbutton {
+
+
+.upbutton {
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -47,14 +55,12 @@ tr:nth-child(even) {
     cursor: pointer;
 }
 
-.question{
-
-}
-
 .downbutton:hover {
     background-color: #ff2a40;
 }
-        h1 {
+
+
+h1 {
     color: darkmagenta;
 }
 
@@ -63,6 +69,20 @@ h2 {
     position: relative;
     left: 150px;
 }
+
+.qcomment{
+    table-layout: fixed;
+    width: 56%;
+
+}
+
+.acomment{
+    table-layout: fixed;
+    width: 57%;
+
+}
+
+
 </style>
 </head>
 <body>
@@ -108,6 +128,18 @@ h2 {
         {% elif key == "title" %}
             <th width="10%">Question</th>
             <td width="80%"> {{ question[key] }} </td>
+            {% if tags %}
+                <td>
+                {% for tag in tags %}
+                    <a href="/question/{{ question['id'] }}/tag/{{ tag['id'] }}/delete">&#x2717;</a>{{ tag['name'] }}
+                {% endfor %}
+                </td>
+            {% endif %}
+            <td><form action="/question/{{ question['id'] }}/new-tag">
+                <button type="submit">
+                    ADD NEW TAG
+                </button>
+            </form></td>
         {% elif key == "message" %}
             <th width="10%">Description</th>
             <td width="80%"> {{ question[key] }} </td>
@@ -120,33 +152,36 @@ h2 {
 
        </tr>
     {% endfor %}
-    {% if comments %}
+    </table>
+    {% if comments  %}
+            <table><p><strong>Comments:</strong></p></table>
             {%  for comment in comments %}
                 {% if comment['question_id'] != None %}
-                    <p>Comments:</p>
-                    <p>{{ comment['submission_time'] }} </p>
-                    <p>{{ comment['message'] }} </p>
-                    <form action="/comments/{{ comment['id'] }}/edit" >
-                        <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
-                            EDIT COMMENT
-                        </button>
-                    </form>
-                    <form action="/comments/{{ comment['id'] }}/delete" >
-                        <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
-                            DELETE COMMENT
-                        </button>
-                    </form>
+                    <table class="qcomment">
+                        <col width="15px" />
+                        <col width="50px" />
+                        <col width="5px" />
+                        <col width="7px" />
+                        <tr>
+                            <th>{{ comment['submission_time'] }} </th>
+                            <td>{{ comment['message'] }} </td>
+                                <td><form action="/comments/{{ comment['id'] }}/edit" >
+                                    <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
+                                        EDIT
+                                    </button>
+                                </form></td>
+                             <td><form action="/comments/{{ comment['id'] }}/delete" >
+                                <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
+                                    DELETE
+                                </button>
+                            </form></td>
+                        </tr>
+                    </table>
                 {% endif %}
             {% endfor %}
         {% endif %}
-        <form action="/question/{{ question['id'] }}/new-comment" >
-        <button type="submit">
-            ADD COMMENT
-        </button>
-        </form>
-    </table>
-    </div>
     <br>
+    </div>
 
     {% if answers %}
     <div align="center">
@@ -158,6 +193,11 @@ h2 {
             {% if key == "message" %}
                 <th width="10%">Answer</th>
                 <td width="80%"> {{ answer[key] }} </td>
+                <td><form action="/answer/{{ answer['id'] }}/new-comment" >
+                    <button type="submit">
+                        ADD COMMENT
+                    </button>
+                </form></td>
             {% elif key == "vote_number" %}
                 <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
@@ -176,46 +216,51 @@ h2 {
                 <th width="10%"> Image </th>
                 <td width="80%"> <img src="/static/images/{{ answer[key] }}" alt=" " width="200" height="200" /> </td>
                 {% endif %}
-                {% else %}
+            {%  elif key == "comment" %}
+                {% if comments %}
+                     <table ><p><strong>Comments:</strong></p></table>
+                    {%  for comment in comments %}
+                        {% if comment['answer_id'] == answer['id'] %}
+                         <table class="acomment">
+                             <col width="15px" />
+                             <col width="50px" />
+                             <col width="5px" />
+                             <col width="7px" />
+                        <tr>
+                            <th>{{ comment['submission_time'] }} </th>
+                            <td>{{ comment['message'] }} </td>
+                            <td><form action="/comments/{{ comment['id'] }}/edit" >
+                                <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                                    EDIT
+                                </button>
+                            </form></td>
+                            <td><form action="/comments/{{ comment['id'] }}/delete" >
+                                <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                                    DELETE
+                                </button>
+                            </form></td>
+                        </tr>
+                            </table>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             {% endif %}
         </tr>
         {% endfor %}
-        {% if comments %}
-            {%  for comment in comments %}
-                {% if comment['answer_id'] == answer['id'] %}
-                    <p>Comments:</p>
-                    <p>{{ comment['submission_time'] }} </p>
-                    <p>{{ comment['message'] }} </p>
-                    <form action="/comments/{{ comment['id'] }}/edit" >
-                        <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
-                            EDIT COMMENT
-                        </button>
-                    </form>
-                    <form action="/comments/{{ comment['id'] }}/delete" >
-                        <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
-                            DELETE COMMENT
-                        </button>
-                    </form>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
         <br>
-        <form action="/answer/{{ answer['id'] }}/new-comment" >
-            <button type="submit">
-                ADD COMMENT
-            </button>
-        </form>
         </table><br>
     {% endfor %}
 
     <br>
-
+    {% endif %}
+    </div>
+    <div align="center">
     <form action="/list">
         <button type="submit">
             BACK TO QUESTIONS
         </button>
     </form>
     </div>
-    {% endif %}
+
 </body>
 </html>
