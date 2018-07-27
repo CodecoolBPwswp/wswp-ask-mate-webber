@@ -218,7 +218,7 @@ h2 {
                 {% endif %}
             {%  elif key == "comment" %}
                 {% if comments %}
-                     <table ><p><strong>Comments:</strong></p></table>
+                     <table><p><strong>Comments:</strong></p></table>
                     {%  for comment in comments %}
                         {% if comment['answer_id'] == answer['id'] %}
                          <table class="acomment">
