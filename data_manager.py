@@ -294,3 +294,27 @@ def new_available_tag(cursor, tag, question_id):
 @database_common.connection_handler
 def delete_tag(cursor, question_id, tag_id):
     cursor.execute("DELETE FROM question_tag WHERE question_id=%s and tag_id=%s", (question_id, tag_id))
+
+
+@database_common.connection_handler
+def user_name_check(cursor, username):
+    cursor.execute("""SELECT CASE WHEN EXISTS (
+                    SELECT *
+                    FROM users
+                    WHERE username = %s
+                    )
+                    THEN CAST(1 AS BIT)
+                    ELSE CAST(0 AS BIT) END""", (username,))
+
+    used = cursor.fetchall()[0]['case']
+
+    return int(used)
+
+
+@database_common.connection_handler
+def insert_new_user(cursor, username, password_hash):
+    date = time_generator()
+    cursor.execute(""" 
+                    INSERT INTO users (username, hashed_pw, date) 
+                    VALUES (%s, %s, %s) 
+                    """, (username, password_hash, date))

@@ -3,53 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Ask a question | Askmate</title>
-     <style>
+    <style>
         body {
-    background-color: #F0EDE5;
-}
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-}
+            background-color: #F0EDE5;
+        }
 
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 6px;
-}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 80%;
+        }
 
-tr:nth-child(even) {
-    background-color: #92B6D5;
-}
-         h1 {
-    color: darkmagenta;
-}
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 6px;
+        }
 
-h2 {
-    color: darkorange;
-}
-</style>
+        tr:nth-child(even) {
+            background-color: #92B6D5;
+        }
+
+        h1 {
+            color: darkmagenta;
+        }
+
+        h2 {
+            color: darkorange;
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter your question</h1>
-    <div>
-        <p>Title:</p>
-        <form action='/question/{{ question.id if update}}{{ "/edit" if update }}' enctype=multipart/form-data method="POST">
-        <input id="title" type="text" name="title" value="{{ question.title if update else title}}" required><br>
+<h1>Enter your question</h1>
+<div>
+    <p>Title:</p>
+    <form action='/question/{{ question.id if update }}{{ "/edit" if update }}' enctype=multipart/form-data
+          method="POST">
+        <input id="title" type="text" name="title" value="{{ question.title if update else title }}" required><br>
         <br>
         <p><b>Description</b></p>
         <input id="id" name="id" type="hidden" value="{{ question.id if update }}">
-        <input id="submission_time" name="submission_time" type="hidden" value="{{ question.submission_time if update else submission_time }}">
+        <input id="submission_time" name="submission_time" type="hidden"
+               value="{{ question.submission_time if update else submission_time }}">
         <input id="vote_number" name="vote_number" type="hidden" value="{{ question.vote_number if update else 0 }}">
-            <input id="view_number" name="view_number" type="hidden" value="{{ question.view_number if update else  0 }}">
-            <input id="image" name="image" type="hidden" value="{{ question.image if update else '' }}">
-        <textarea id="message" name="message" rows="10" cols="50" minlength="10">{{ question.message if update else message }}</textarea>
-            <p><input type=file name=photo></p>
+        <input id="view_number" name="view_number" type="hidden" value="{{ question.view_number if update else  0 }}">
+        <input id="image" name="image" type="hidden" value="{{ question.image if update else '' }}">
+        <textarea id="message" name="message" rows="10" cols="50"
+                  minlength="10">{{ question.message if update else message }}</textarea>
+        <p><input type=file name=photo></p>
 
 
-        <p><button type="submit">Add your question</button></p>
+        <p>
+            <button type="submit">Add your question</button>
+        </p>
     </form>
-    </div>
+</div>
 </body>
 </html>

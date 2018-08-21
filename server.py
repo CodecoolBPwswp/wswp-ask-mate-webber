@@ -4,7 +4,7 @@ import data_manager
 import operator
 import os
 from operator import itemgetter
-
+import password_hasher
 
 app = Flask(__name__)
 
@@ -85,7 +85,8 @@ def question(question_id):
     comments = data_manager.get_comments(question_id)
     tags = data_manager.get_tags(question_id)
 
-    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head, comments=comments, tags=tags)
+    return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head,
+                           comments=comments, tags=tags)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -106,13 +107,15 @@ def update_question(question_id):
         data_manager.update_question_table(data, data['id'])
         return redirect('/question/{}'.format(question_id))
 
+
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
     submission_time = data_manager.time_generator()
     if request.method == 'GET':
         update = True
         answer_needs_update = data_manager.answer_under_update(answer_id)
-        return render_template('new_answer.html', submission_time=submission_time, answer=answer_needs_update, update=update)
+        return render_template('new_answer.html', submission_time=submission_time, answer=answer_needs_update,
+                               update=update)
     else:
         data = request.form.to_dict()
         question_id = data_manager.update_answer_table(data, answer_id)
@@ -132,7 +135,8 @@ def new_comment_to_question(question_id):
     if request.method == 'GET':
         question_comment = True
         submission_time = data_manager.time_generator()
-        return render_template('new_comment.html', question_id=question_id, submission_time=submission_time, question_comment=question_comment)
+        return render_template('new_comment.html', question_id=question_id, submission_time=submission_time,
+                               question_comment=question_comment)
     else:
         comment = request.form.to_dict()
         comment["question_id"] = question_id
@@ -147,7 +151,8 @@ def new_comment_to_answer(answer_id):
     if request.method == 'GET':
         question_comment = False
         submission_time = data_manager.time_generator()
-        return render_template('new_comment.html', answer_id=answer_id, submission_time=submission_time, question_comment=question_comment)
+        return render_template('new_comment.html', answer_id=answer_id, submission_time=submission_time,
+                               question_comment=question_comment)
     else:
         comment = request.form.to_dict()
         comment["answer_id"] = answer_id
@@ -160,14 +165,10 @@ def new_comment_to_answer(answer_id):
 @app.route('/search', methods=['GET'])
 def search():
     searched_data = request.args.to_dict()
-    #question_results = []
-    #answer_results = []
     found_answer_data = data_manager.find_searched_data_in_answer_db(searched_data)
-    #if len(found_answer_data) != 0:
-        #answer_results.append(found_answer_data)
+
     found_question_data = data_manager.find_searched_data_in_question_db(searched_data)
-    #if len(found_question_data) != 0:
-        #question_results.append(found_question_data)
+
     return render_template('searched_data.html', question_result=found_question_data, answer_result=found_answer_data)
 
 
@@ -192,7 +193,8 @@ def edit_question_comment(comment_id):
 
         if 'question_id' in data_id.keys():
             question_comment = True
-        return render_template('new_comment.html', comment_update=comment_update, comment=comment, question_comment=question_comment)
+        return render_template('new_comment.html', comment_update=comment_update, comment=comment,
+                               question_comment=question_comment)
 
     elif request.method == 'POST':
         comment = request.form.to_dict()
@@ -228,6 +230,22 @@ def new_tag(question_id):
 def delete_tag(question_id, tag_id):
     data_manager.delete_tag(question_id, tag_id)
     return redirect('question/{}'.format(question_id))
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == "POST":
+        user_data = request.form.to_dict()
+        username = user_data['username']
+        used = data_manager.user_name_check(username)
+        if used:
+            return render_template('registration.html', used=used)
+        password = user_data['password']
+        hashed_pw = password_hasher.hash_password(password)
+        data_manager.insert_new_user(username, hashed_pw)
+        return redirect('/list')
+
+    return render_template('registration.html')
 
 
 if __name__ == '__main__':
