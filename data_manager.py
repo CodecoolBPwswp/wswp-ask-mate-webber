@@ -67,9 +67,11 @@ def delete(cursor, question_id):
     if ans_ids:
         cursor.execute("DELETE FROM comment WHERE answer_id IN %s", (ans_ids,))
 
+    cursor.execute("DELETE FROM question_tag WHERE question_id=%s", (question_id,))
     cursor.execute("DELETE FROM comment WHERE question_id=%s", (question_id,))
     cursor.execute("DELETE FROM answer WHERE question_id=%s", (question_id,))
     cursor.execute("DELETE FROM question WHERE id=%s", (question_id,))
+
 
 
 @database_common.connection_handler
@@ -417,3 +419,16 @@ def get_users_comments(cursor, user_id):
     users_comments = cursor.fetchall()
 
     return users_comments
+
+
+@database_common.connection_handler
+def get_all_tag(cursor):
+    cursor.execute("""
+                    SELECT tag.name, COUNT(question_tag.tag_id) 
+                    FROM tag LEFT JOIN question_tag ON tag.id = question_tag.tag_id 
+                    GROUP BY tag.name 
+                    ORDER BY COUNT(question_tag.tag_id) DESC
+                    """)
+
+    tags = cursor.fetchall()
+    return tags

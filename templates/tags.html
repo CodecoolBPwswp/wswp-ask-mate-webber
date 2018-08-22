@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tags</title>
+    <style>
+        body {
+    background-color: #F0EDE5
+    }
+
+        table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 20%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 6px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #92B6D5;
+    }
+
+     h1 {
+        color: darkmagenta;
+    }
+
+    </style>
+</head>
+<body>
+<div align="center">
+    <h1>Tags:</h1>
+    <table>
+        <tr>
+            <th>Tag name</th>
+            <th>Tag Count</th>
+        </tr>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag['name'] }}</td>
+                <td>{{ tag["count"] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <form action="/list">
+        <button type="submit">
+            BACK TO QUESTIONS
+        </button>
+    </form>
+</div>
+</body>
+</html>

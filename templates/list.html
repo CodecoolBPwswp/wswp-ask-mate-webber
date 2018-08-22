@@ -25,7 +25,8 @@ tr:nth-child(even) {
 .searching a {
     padding: 250px, 100px;
 }
-        h1 {
+
+h1 {
     color: darkmagenta;
 }
 
@@ -93,17 +94,19 @@ h2 {
         {% endfor %}
     </table>
     <br>
+    <button><a href="/tags">All tag</a></button>
     {% if first %}
         <button><a href="/list">All question</a></button>
     {% else %}
         <button><a href="/">Top five question</a></button>
     {% endif %}
+    <br>
     {% if session['username'] %}
-    <form action="/add-question" method="POST">
-        <button type="submit">
-            ADD QUESTION
-        </button>
-    </form>
+        <form action="/add-question" method="POST">
+            <button type="submit">
+                ADD QUESTION
+            </button>
+        </form>
     {% endif %}
     </div>
 </body>
