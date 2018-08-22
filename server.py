@@ -240,12 +240,19 @@ def registration():
         used = data_manager.user_name_check(username)
         if used:
             return render_template('registration.html', used=used)
+        elif user_data['password'] != user_data['password1']:
+            return render_template('registration.html', used2=True)
         password = user_data['password']
         hashed_pw = password_hasher.hash_password(password)
         data_manager.insert_new_user(username, hashed_pw)
         return redirect('/list')
 
     return render_template('registration.html')
+
+
+@app.route('/login')
+def login():
+    pass
 
 
 if __name__ == '__main__':
