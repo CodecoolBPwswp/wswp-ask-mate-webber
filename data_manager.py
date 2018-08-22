@@ -1,6 +1,7 @@
 import database_common
 import datetime
 import os
+import password_hasher
 
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image", "comment"]
@@ -318,3 +319,19 @@ def insert_new_user(cursor, username, password_hash):
                     INSERT INTO users (username, hashed_pw, date) 
                     VALUES (%s, %s, %s) 
                     """, (username, password_hash, date))
+
+
+@database_common.connection_handler
+def verify_login(cursor, username, password):
+    cursor.execute("""
+                    SELECT username, hashed_pw FROM users
+                    WHERE username = %s
+                    """, (username,))
+    try:
+        user = cursor.fetchall()[0]
+        verified = password_hasher.verify_password(password, user['hashed_pw'])
+
+        return verified
+    except IndexError:
+        verified = False
+        return verified

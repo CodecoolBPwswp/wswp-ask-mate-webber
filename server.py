@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 import data_manager
 import operator
@@ -7,6 +7,8 @@ from operator import itemgetter
 import password_hasher
 
 app = Flask(__name__)
+
+app.secret_key = os.urandom(16)
 
 photos = UploadSet('photos', IMAGES)
 
@@ -80,6 +82,7 @@ def save_question():
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
 def question(question_id):
+    print(session)
     html_file = "question_with_answers.html"
     question, answers = data_manager.get_question_byid(question_id)
     comments = data_manager.get_comments(question_id)
@@ -246,6 +249,30 @@ def registration():
         return redirect('/list')
 
     return render_template('registration.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user_data = request.form.to_dict()
+        username = user_data['username']
+        password = user_data['password']
+        is_ok = data_manager.verify_login(username, password)
+        if is_ok:
+            session['username'] = request.form['username']
+            flash('You are successfully logged in as ' + username)
+        else:
+            flash('Invalid username or password')
+        print(session)
+        return redirect('/')
+
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect('/list')
+
 
 
 if __name__ == '__main__':
