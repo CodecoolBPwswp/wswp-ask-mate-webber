@@ -213,8 +213,10 @@ h2 {
             {% elif key == "submission_time" %}
                 <th width="10%"> Submission time </th>
                 <th width="80%"> {{ answer[key] }} </th>
+            {% if session['user_id'] == answer['user_id'] %}
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/edit" formmethod="GET">EDIT ANSWER</button></td></form>
                 <form><td width="10"><button type="submit" formaction="/answer/{{ answer['id'] }}/delete" formmethod="GET" name="image" value="{{ answer['image'] }}">DELETE ANSWER</button></td></form>
+            {% endif %}
             {% elif key == "image" %}
                 {% if answer[key] %}
                 <th width="10%"> Image </th>
@@ -233,16 +235,18 @@ h2 {
                         <tr>
                             <th>{{ comment['submission_time'] }} </th>
                             <td>{{ comment['message'] }} </td>
-                            <td><form action="/comments/{{ comment['id'] }}/edit" >
-                                <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
-                                    EDIT
-                                </button>
-                            </form></td>
-                            <td><form action="/comments/{{ comment['id'] }}/delete" >
-                                <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
-                                    DELETE
-                                </button>
-                            </form></td>
+                            {% if session['user_id'] == comment['user_id'] %}
+                                <td><form action="/comments/{{ comment['id'] }}/edit" >
+                                    <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                                        EDIT
+                                    </button>
+                                </form></td>
+                                <td><form action="/comments/{{ comment['id'] }}/delete" >
+                                    <button type="submit" name="answer_id" value="{{ comment['answer_id'] }}">
+                                        DELETE
+                                    </button>
+                                </form></td>
+                            {% endif %}
                         </tr>
                             </table>
                         {% endif %}
