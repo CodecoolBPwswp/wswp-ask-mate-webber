@@ -33,10 +33,14 @@ def get_all_answer(cursor):
 def get_question_byid(cursor, q_id):
     #cursor.execute("UPDATE question SET view_number=view_number+1 WHERE id=%s", (q_id,))
 
-    cursor.execute("SELECT * FROM question WHERE id=%s", (q_id,))
+    cursor.execute("""SELECT question.*, users.username 
+                      FROM question LEFT JOIN users ON question.user_id = users.id 
+                      WHERE question.id=%s""", (q_id,))
     question = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM answer WHERE question_id=%s ORDER BY submission_time DESC", (q_id,))
+    cursor.execute("""SELECT answer.*, users.username 
+                      FROM answer LEFT JOIN users ON answer.user_id = users.id
+                      WHERE answer.question_id=%s ORDER BY submission_time DESC""", (q_id,))
     answers = cursor.fetchall()
 
     return question, answers
@@ -107,8 +111,8 @@ def update_answer_table(cursor, new_data, answer_id):
 
 @database_common.connection_handler
 def new_answer(cursor, answer):
-    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                    VALUES(%s, %s, %s, %s, %s)""", (answer['submission_time'], answer['vote_number'], answer['question_id'], answer['message'], answer['image']))
+    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image, user_id)
+                    VALUES(%s, %s, %s, %s, %s, %s)""", (answer['submission_time'], answer['vote_number'], answer['question_id'], answer['message'], answer['image'], answer["user_id"]))
 
     cursor.execute("SELECT * FROM answer ORDER BY ID DESC LIMIT 1")
     answer = cursor.fetchall()
@@ -116,8 +120,8 @@ def new_answer(cursor, answer):
 
 @database_common.connection_handler
 def new_question(cursor, question):
-    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                        VALUES(%(submission_time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s)""",
+    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_id)
+                        VALUES(%(submission_time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s, %(user_id)s)""",
                    question)
 
     cursor.execute("SELECT * FROM question ORDER BY ID DESC LIMIT 1")
@@ -149,15 +153,15 @@ def vote(cursor, question_id, button_data, operatorr):
 
 @database_common.connection_handler
 def question_comment(cursor, comment):
-    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s)    
+    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
+                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s, %(user_id)s)
                     """, comment)
 
 
 @database_common.connection_handler
 def answer_comment(cursor, comment):
-    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s)    
+    cursor.execute("""INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count,user_id)
+                      VALUES(%(question_id)s,%(answer_id)s,%(message)s,%(submission_time)s,%(edited_count)s, %(user_id)s)
                     """, comment)
 
     cursor.execute("SELECT question_id FROM answer WHERE id=%s", (comment['answer_id'],))
@@ -168,7 +172,9 @@ def answer_comment(cursor, comment):
 @database_common.connection_handler
 def get_comments(cursor, question_id):
 
-    cursor.execute("SELECT * FROM comment WHERE question_id=%s ORDER BY submission_time DESC", (question_id,))
+    cursor.execute("""SELECT comment.*, users.username FROM comment 
+                      LEFT JOIN users ON comment.user_id = users.id 
+                      WHERE comment.question_id=%s ORDER BY comment.submission_time DESC""", (question_id,))
     q_comments = cursor.fetchall()
     comments = q_comments
 
@@ -176,7 +182,9 @@ def get_comments(cursor, question_id):
     ans_id_for_comments = cursor.fetchall()
     ans_ids = tuple([value['id'] for value in ans_id_for_comments])
     if ans_ids:
-        cursor.execute("SELECT * FROM comment WHERE answer_id IN %s ORDER BY submission_time DESC", (ans_ids,))
+        cursor.execute("""SELECT comment.*, users.username FROM comment 
+                          LEFT JOIN users ON comment.user_id = users.id
+                          WHERE comment.answer_id IN %s ORDER BY comment.submission_time DESC""", (ans_ids,))
         a_comments = cursor.fetchall()
         comments = a_comments + q_comments
 

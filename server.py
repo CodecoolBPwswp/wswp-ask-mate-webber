@@ -67,15 +67,17 @@ def delete_answer(answer_id):
 
 @app.route("/answer/", methods=['POST'])
 @app.route("/question/", methods=['POST'])
-def save_question():
+def save_question_or_answer():
     if request.method == 'POST' and 'photo' in request.files:
         try:
             filename = photos.save(request.files['photo'])
             data = request.form.to_dict()
             data["image"] = filename
+            data["user_id"] = session["user_id"]
             id_var = data_manager.add_question_or_answer(data)
         except:
             data = request.form.to_dict()
+            data["user_id"] = session["user_id"]
             id_var = data_manager.add_question_or_answer(data)
 
         return redirect('question/{}'.format(id_var))
@@ -146,6 +148,7 @@ def new_comment_to_question(question_id):
         comment["question_id"] = question_id
         comment["answer_id"] = None
         comment["edited_count"] = None
+        comment["user_id"] = session["user_id"]
         data_manager.question_comment(comment)
         return redirect('question/{}'.format(question_id))
 
@@ -162,6 +165,7 @@ def new_comment_to_answer(answer_id):
         comment["answer_id"] = answer_id
         comment["question_id"] = None
         comment["edited_count"] = None
+        comment["user_id"] = session["user_id"]
         question_id = data_manager.answer_comment(comment)
         return redirect('question/{}'.format(question_id))
 
@@ -264,7 +268,7 @@ def login():
         if is_ok:
             session['username'] = request.form['username']
             session['user_id'] = data_manager.get_user_id_by_name(username)
-            flash('You are successfully logged in as ' + username)
+            flash('You are successfully logged in as: ')
         else:
             flash('Invalid username or password')
         print(session)
@@ -275,7 +279,8 @@ def login():
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
-    return redirect('/list')
+    session.pop('user_id', None)
+    return redirect('/')
 
 
 @app.route('/user/<username>')
