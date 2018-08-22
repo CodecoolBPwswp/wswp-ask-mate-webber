@@ -278,6 +278,14 @@ def logout():
     return redirect('/list')
 
 
+@app.route('/user/<username>')
+def user_page():
+    user_id = session['user_id']
+    questions = data_manager.get_users_questions(user_id)
+    answers = data_manager.get_users_answers(user_id)
+    comments = data_manager.get_users_comments(user_id)
+    return render_template('user_page.html', questions=questions, answers=answers, comments=comments)
+
 
 if __name__ == '__main__':
     app.run(

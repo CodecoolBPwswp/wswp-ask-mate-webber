@@ -345,3 +345,27 @@ def get_user_id_by_name(cursor, username):
 
     user_id = cursor.fetchall()[0]['id']
     return user_id
+
+
+@database_common.connection_handler
+def get_users_questions(cursor, user_id):
+    cursor.execute("""SELECT submission_time, title FROM question WHERE user_id = %s""", (user_id))
+
+    users_questions = cursor.fetchall()[0]
+    return users_questions
+
+
+@database_common.connection_handler
+def get_users_answers(cursor, user_id):
+    cursor.execute("""SELECT submission_time, message FROM answer WHERE user_id = %s""", (user_id))
+
+    users_answers = cursor.fetchall()[0]
+    return users_answers
+
+
+@database_common.connection_handler
+def get_users_comments(cursor, user_id):
+    cursor.execute("""SELECT submission_time, message FROM comment WHERE user_id = %s""", (user_id))
+
+    users_comments = cursor.fetchall()[0]
+    return users_comments

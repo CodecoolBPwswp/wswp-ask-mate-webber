@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ session['user_name'] }}'s page</title>
+</head>
+<body>
+    <h1>{{ session['user_name'] }}'s page</h1>
+    <h2>Questions You have asked:</h2>
+        <table>
+            <tr>
+                <th>Submission time</th>
+                <th>Title of question</th>
+            </tr>
+            {% for question in questions %}
+                <tr>
+                    <td>{{ qestion.submission_time }}</td>
+                    <td>{{ question.title }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    <h2>Answers You have given:</h2>
+        <table>
+            <tr>
+                <th>Submission time</th>
+                <th>Message</th>
+            </tr>
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer.submission_time }}</td>
+                    <td>{{ answer.message }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    <h2>Comments You have written:</h2>
+        <table>
+            <tr>
+                <th>Submission time</th>
+                <th>Message</th>
+            </tr>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.submission_time }}</td>
+                    <td>{{ comment.message }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+</body>
+</html>
