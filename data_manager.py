@@ -139,16 +139,47 @@ def add_question_or_answer(data):
 
 
 @database_common.connection_handler
-def vote(cursor, question_id, button_data, operatorr):
+def vote(cursor, question_id, button_data, operatorr, user_id):
     data = get_question_byid(question_id)[0][0]
     if "question" in button_data.keys():
         data['vote_number'] = operatorr(int(data['vote_number']), 1)
         cursor.execute("UPDATE question SET vote_number=%s WHERE id=%s", (data['vote_number'], data['id']))
+        cursor.execute("""INSERT INTO votes (user_id, question_id) 
+                          VALUES (%s, %s)""", (user_id, data['id']))
+
     elif "answer" in button_data.keys():
         cursor.execute("SELECT vote_number FROM answer WHERE id=%s", (button_data['answer'],))
         data = cursor.fetchall()[0]
         data['vote_number'] = operatorr(int(data['vote_number']), 1)
         cursor.execute("UPDATE answer SET vote_number=%s WHERE id=%s AND question_id=%s ", (data['vote_number'], button_data['answer'], question_id))
+        cursor.execute("""INSERT INTO votes (user_id, answer_id)
+                          VALUES (%s, %s)""", (user_id, button_data["answer"]))
+
+
+@database_common.connection_handler
+def votes_for_question(cursor, question_id, user_id):
+    cursor.execute("""
+                    SELECT question_id FROM votes
+                    WHERE user_id = %s AND question_id = %s
+                  """, (user_id, question_id))
+
+    try:
+        question_vote = cursor.fetchall()[0]
+        return question_vote
+    except IndexError:
+        return False
+
+
+@database_common.connection_handler
+def votes_for_answer(cursor, user_id):
+    cursor.execute("""
+                    SELECT answer_id FROM votes
+                    WHERE user_id = %s AND answer_id IS NOT NULL
+                  """, (user_id,))
+
+    answer_votes = cursor.fetchall()
+    answer_votes = tuple([answer['answer_id'] for answer in answer_votes])
+    return answer_votes
 
 
 @database_common.connection_handler

@@ -85,14 +85,18 @@ def save_question_or_answer():
 
 @app.route("/question/<int:question_id>", methods=['GET', 'POST'])
 def question(question_id):
-    print(session)
     html_file = "question_with_answers.html"
     question, answers = data_manager.get_question_byid(question_id)
     comments = data_manager.get_comments(question_id)
     tags = data_manager.get_tags(question_id)
+    question_vote = None
+    answer_votes = None
+    if session:
+        question_vote = data_manager.votes_for_question(question_id, session['user_id'])
+        answer_votes = data_manager.votes_for_answer(session['user_id'])
 
     return render_template(html_file, question=question[0], answers=answers, q_head=q_head, a_head=a_head,
-                           comments=comments, tags=tags)
+                           comments=comments, tags=tags, question_vote=question_vote, answer_votes=answer_votes)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -132,7 +136,8 @@ def edit_answer(answer_id):
 def voter(question_id, dir):
     operatorr = operator.__add__ if dir == "up" else operator.__sub__
     data = request.form.to_dict()
-    data_manager.vote(question_id, data, operatorr)
+    user_id = session["user_id"]
+    data_manager.vote(question_id, data, operatorr, user_id)
     return redirect('question/{}'.format(question_id))
 
 
