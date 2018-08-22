@@ -282,7 +282,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
+    # remove the username, user_id from the session if it's there
     session.pop('username', None)
     session.pop('user_id', None)
     return redirect('/')
