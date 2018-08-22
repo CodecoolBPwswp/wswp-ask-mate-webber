@@ -33,12 +33,12 @@ def get_all_answer(cursor):
 def get_question_byid(cursor, q_id):
     #cursor.execute("UPDATE question SET view_number=view_number+1 WHERE id=%s", (q_id,))
 
-    cursor.execute("""SELECT question.*, users.username 
+    cursor.execute("""SELECT question.*, users.username, users.id AS user_id
                       FROM question LEFT JOIN users ON question.user_id = users.id 
                       WHERE question.id=%s""", (q_id,))
     question = cursor.fetchall()
 
-    cursor.execute("""SELECT answer.*, users.username 
+    cursor.execute("""SELECT answer.*, users.username, users.id AS user_id
                       FROM answer LEFT JOIN users ON answer.user_id = users.id
                       WHERE answer.question_id=%s ORDER BY submission_time DESC""", (q_id,))
     answers = cursor.fetchall()
@@ -172,7 +172,7 @@ def answer_comment(cursor, comment):
 @database_common.connection_handler
 def get_comments(cursor, question_id):
 
-    cursor.execute("""SELECT comment.*, users.username FROM comment 
+    cursor.execute("""SELECT comment.*, users.username, users.id AS user_id FROM comment 
                       LEFT JOIN users ON comment.user_id = users.id 
                       WHERE comment.question_id=%s ORDER BY comment.submission_time DESC""", (question_id,))
     q_comments = cursor.fetchall()
@@ -182,7 +182,7 @@ def get_comments(cursor, question_id):
     ans_id_for_comments = cursor.fetchall()
     ans_ids = tuple([value['id'] for value in ans_id_for_comments])
     if ans_ids:
-        cursor.execute("""SELECT comment.*, users.username FROM comment 
+        cursor.execute("""SELECT comment.*, users.username, users.id AS user_id FROM comment 
                           LEFT JOIN users ON comment.user_id = users.id
                           WHERE comment.answer_id IN %s ORDER BY comment.submission_time DESC""", (ans_ids,))
         a_comments = cursor.fetchall()
@@ -357,23 +357,32 @@ def get_user_id_by_name(cursor, username):
 
 @database_common.connection_handler
 def get_users_questions(cursor, user_id):
-    cursor.execute("""SELECT submission_time, title FROM question WHERE user_id = %s""", (user_id))
+    cursor.execute("""SELECT question.submission_time, question.title, users.username 
+                      FROM question LEFT JOIN users ON question.user_id = users.id 
+                      WHERE question.user_id = %s""", (user_id,))
 
-    users_questions = cursor.fetchall()[0]
+    users_questions = cursor.fetchall()
+
     return users_questions
 
 
 @database_common.connection_handler
 def get_users_answers(cursor, user_id):
-    cursor.execute("""SELECT submission_time, message FROM answer WHERE user_id = %s""", (user_id))
+    cursor.execute("""SELECT answer.submission_time, answer.message, users.username 
+                      FROM answer LEFT JOIN users ON answer.user_id = users.id 
+                      WHERE answer.user_id = %s""", (user_id,))
 
-    users_answers = cursor.fetchall()[0]
+    users_answers = cursor.fetchall()
+
     return users_answers
 
 
 @database_common.connection_handler
 def get_users_comments(cursor, user_id):
-    cursor.execute("""SELECT submission_time, message FROM comment WHERE user_id = %s""", (user_id))
+    cursor.execute("""SELECT comment.submission_time, comment.message, users.username 
+                      FROM comment LEFT JOIN users ON comment.user_id = users.id 
+                      WHERE comment.user_id = %s""", (user_id,))
 
-    users_comments = cursor.fetchall()[0]
+    users_comments = cursor.fetchall()
+
     return users_comments

@@ -54,7 +54,7 @@ h2 {
           {% endif %}
         {% endwith %}
         {% if session["username"] %}
-            <a><p>{{ session['username'] }}</p></a>
+            <a href="/user/{{ session['user_id'] }}"><p>{{ session['username'] }}</p></a>
             <form action="/logout"><input type="submit" value="Logout"></form>
         {% endif %}
 

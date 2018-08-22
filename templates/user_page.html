@@ -5,7 +5,16 @@
     <title>{{ session['user_name'] }}'s page</title>
 </head>
 <body>
-    <h1>{{ session['user_name'] }}'s page</h1>
+    {% if questions %}
+        <h1>{{ questions[0]['username'] }}'s page</h1>
+    {% elif answers %}
+        <h1>{{ answers[0]['username'] }}'s page</h1>
+    {% elif comments %}
+        <h1>{{ comments[0]['username'] }}'s page</h1>
+    {% else %}
+        <h1><a href="/">Nothing to show</a></h1>
+    {% endif %}
+    {% if questions %}
     <h2>Questions You have asked:</h2>
         <table>
             <tr>
@@ -14,11 +23,13 @@
             </tr>
             {% for question in questions %}
                 <tr>
-                    <td>{{ qestion.submission_time }}</td>
+                    <td>{{ question.submission_time }}</td>
                     <td>{{ question.title }}</td>
                 </tr>
             {% endfor %}
         </table>
+    {% endif %}
+    {% if answers %}
     <h2>Answers You have given:</h2>
         <table>
             <tr>
@@ -32,6 +43,8 @@
                 </tr>
             {% endfor %}
         </table>
+    {% endif %}
+    {% if comments %}
     <h2>Comments You have written:</h2>
         <table>
             <tr>
@@ -45,5 +58,6 @@
                 </tr>
             {% endfor %}
         </table>
+    {% endif %}
 </body>
 </html>

@@ -283,9 +283,8 @@ def logout():
     return redirect('/')
 
 
-@app.route('/user/<username>')
-def user_page():
-    user_id = session['user_id']
+@app.route('/user/<user_id>')
+def user_page(user_id):
     questions = data_manager.get_users_questions(user_id)
     answers = data_manager.get_users_answers(user_id)
     comments = data_manager.get_users_comments(user_id)
