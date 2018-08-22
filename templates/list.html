@@ -94,11 +94,13 @@ h2 {
     {% else %}
         <button><a href="/">Top five question</a></button>
     {% endif %}
+    {% if session['username'] %}
     <form action="/add-question" method="POST">
         <button type="submit">
             ADD QUESTION
         </button>
     </form>
+    {% endif %}
     </div>
 </body>
 </html>
