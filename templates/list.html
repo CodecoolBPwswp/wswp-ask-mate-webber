@@ -53,6 +53,10 @@ h2 {
             {% endfor %}
           {% endif %}
         {% endwith %}
+        {% if session["username"] %}
+            <a><p>{{ session['username'] }}</p></a>
+            <form action="/logout"><input type="submit" value="Logout"></form>
+        {% endif %}
 
         <form action="/search">
             <input type="text" placeholder="Search..." name="q">

@@ -80,14 +80,18 @@ h2 {
     table-layout: fixed;
     width: 57%;
 
-}
-
 
 </style>
 </head>
 <body>
     <div align="center">
     <h1>Details of question</h1>
+
+    {% if session["username"] %}
+        <a><p>{{ session['username'] }}</p></a>
+        <form action="/logout"><input type="submit" value="Logout"></form>
+    {% endif %}
+
     <h2 align="left">Question:</h2>
     <table width="50%" border="1">
     {% for key in q_head %}
@@ -102,6 +106,7 @@ h2 {
                 </form>
            {% endif %}
         {% elif key == "submission_time" %}
+            <tr><th width="10%">{{ question["username"] }}</th></tr>
             <th width="10%"> Submission time </th>
             <th width="80%"> {{ question[key] }} </th>
             {% if session['user_id'] == question['user_id'] %}
@@ -171,6 +176,7 @@ h2 {
                         <col width="5px" />
                         <col width="7px" />
                         <tr>
+                            <tr><th width="10%">{{ comment["username"] }}</th></tr>
                             <th>{{ comment['submission_time'] }} </th>
                             <td>{{ comment['message'] }} </td>
                             {% if session['user_id'] == comment['user_id'] %}
@@ -221,6 +227,7 @@ h2 {
                     </form>
                 {% endif %}
             {% elif key == "submission_time" %}
+                <tr><th width="10%" >{{ answer["username"] }}</th></tr>
                 <th width="10%"> Submission time </th>
                 <th width="80%"> {{ answer[key] }} </th>
             {% if session['user_id'] == answer['user_id'] %}
@@ -243,6 +250,7 @@ h2 {
                              <col width="5px" />
                              <col width="7px" />
                         <tr>
+                            <tr><th width="10%">{{ comment["username"] }}</th></tr>
                             <th>{{ comment['submission_time'] }} </th>
                             <td>{{ comment['message'] }} </td>
                             {% if session['user_id'] == comment['user_id'] %}
