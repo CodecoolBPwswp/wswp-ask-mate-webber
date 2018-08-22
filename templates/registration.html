@@ -5,14 +5,24 @@
     <title>Registraton</title>
 </head>
 <body>
+    <h1>Create your account, Mate!</h1>
     {% if used %}
         <script>
             alert("Username already in use");
         </script>
     {% endif %}
+    {% if used2 %}
+        <script>
+            alert("The 2 passwords are not matching");
+        </script>
+    {% endif %}
     <form action="{{ url_for("registration") }}" method="POST">
-        <input type="text" name="username" placeholder="Username" minlength="3" required>
-        <input type="password" name="password" placeholder="Password" minlength="5" required>
+        <p>Username:</p>
+        <p><input type="text" name="username" placeholder="Username" minlength="3" required></p>
+        <p>Password:</p>
+        <p><input type="password" name="password" placeholder="Password" minlength="5" required></p>
+        <p>Password again:</p>
+        <p><input type="password" name="password1" placeholder="Password" minlength="5" required></p>
         <input type="submit" value="Registration">
     </form>
 </body>

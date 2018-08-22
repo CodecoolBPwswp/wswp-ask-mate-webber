@@ -102,6 +102,7 @@ h2 {
         {% elif key == "submission_time" %}
             <th width="10%"> Submission time </th>
             <th width="80%"> {{ question[key] }} </th>
+            {% if session['user_id'] == question['user_id'] %}
             <td><form action="/question/{{ question['id'] }}/edit">
                 <button type="submit">
                     EDIT QUESTION
@@ -112,6 +113,7 @@ h2 {
                     DELETE QUESTION
                 </button>
             </form></td>
+            {%  endif %}
         {% elif key == "view_number" %}
             <th width="10%">Views</th>
             <td width="80%"> {{ question[key] }} </td>
@@ -165,16 +167,18 @@ h2 {
                         <tr>
                             <th>{{ comment['submission_time'] }} </th>
                             <td>{{ comment['message'] }} </td>
+                            {% if session['user_id'] == comment['user_id'] %}
                                 <td><form action="/comments/{{ comment['id'] }}/edit" >
+                                        <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
+                                            EDIT
+                                        </button>
+                                    </form></td>
+                                 <td><form action="/comments/{{ comment['id'] }}/delete" >
                                     <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
-                                        EDIT
+                                        DELETE
                                     </button>
                                 </form></td>
-                             <td><form action="/comments/{{ comment['id'] }}/delete" >
-                                <button type="submit" name="question_id" value="{{ comment['question_id'] }}">
-                                    DELETE
-                                </button>
-                            </form></td>
+                            {% endif %}
                         </tr>
                     </table>
                 {% endif %}
