@@ -335,3 +335,13 @@ def verify_login(cursor, username, password):
     except IndexError:
         verified = False
         return verified
+
+
+@database_common.connection_handler
+def get_user_id_by_name(cursor, username):
+    cursor.execute("""
+                    SELECT id FROM users WHERE username = %s
+                """, (username,))
+
+    user_id = cursor.fetchall()[0]['id']
+    return user_id

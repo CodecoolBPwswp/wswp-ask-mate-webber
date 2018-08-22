@@ -21,6 +21,7 @@ a_head = data_manager.ANSWER_HEADERS
 
 @app.route('/')
 def main():
+    print(session)
     questions = data_manager.get_latest_five_question()
     first = True
     return render_template("list.html", questions=questions, first=first)
@@ -260,6 +261,7 @@ def login():
         is_ok = data_manager.verify_login(username, password)
         if is_ok:
             session['username'] = request.form['username']
+            session['user_id'] = data_manager.get_user_id_by_name(username)
             flash('You are successfully logged in as ' + username)
         else:
             flash('Invalid username or password')
