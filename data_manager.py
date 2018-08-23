@@ -454,3 +454,21 @@ def accepted_question_answer(cursor, question_id):
                 UPDATE question SET accepted_answer = True
                 WHERE id = %s
                 """, (question_id,))
+
+
+@database_common.connection_handler
+def all_users_data(cursor):
+    cursor.execute("""SELECT users.username, users.date, comments.sum_comment, questions.sum_question, answers.sum_answer
+                        
+                          FROM users
+                             LEFT JOIN (
+                              SELECT COUNT(comment.user_id) AS sum_comment, comment.user_id FROM comment GROUP BY comment.user_id
+                              ) AS comments ON users.id = comments.user_id
+                             LEFT JOIN (
+                              SELECT COUNT(question.user_id) AS sum_question, question.user_id FROM question GROUP BY question.user_id
+                              ) AS questions ON comments.user_id = questions.user_id
+                             LEFT JOIN (
+                              SELECT COUNT(answer.user_id) AS sum_answer, answer.user_id FROM answer GROUP BY answer.user_id
+                              ) AS answers ON questions.user_id = answers.user_id""")
+    users_data = cursor.fetchall()
+    return users_data

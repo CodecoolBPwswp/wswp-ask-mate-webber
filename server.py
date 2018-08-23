@@ -91,7 +91,6 @@ def question(question_id):
     tags = data_manager.get_tags(question_id)
     question_vote = None
     answer_votes = None
-    print(answers)
     if session:
         question_vote = data_manager.votes_for_question(question_id, session['user_id'])
         answer_votes = data_manager.votes_for_answer(session['user_id'])
@@ -309,6 +308,12 @@ def accepted_answer():
     question_id = data_manager.accepted_answer_and_return_question_id(answer_id)
     data_manager.accepted_question_answer(question_id)
     return redirect('question/{}'.format(question_id))
+
+
+@app.route('/all_user')
+def all_user():
+    users_data = data_manager.all_users_data()
+    return render_template('list_users.html', users=users_data)
 
 
 if __name__ == '__main__':
