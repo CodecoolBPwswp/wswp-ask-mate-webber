@@ -23,8 +23,8 @@
             <td width="80%"> {{ question[key] }} </td>
            {% if session['username'] %}
                 <form>
-                <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question" {{ "disabled" if question_vote }}>VOTE UP</button></td>
-                    <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" {{ "disabled" if question_vote }}>VOTE DOWN</button></td>
+                <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question["id"] }}/vote-up" formmethod="POST" name="question" style="{{ 'background-color: #4CAF50' if question_vote["dir"] == "up" }}" {{ "disabled" if question_vote }}>VOTE UP</button></td>
+                    <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question["id"] }}/vote-down" formmethod="POST" name="question" style="{{ 'background-color: red' if question_vote["dir"] == "down" }}" {{ "disabled" if question_vote }}>VOTE DOWN</button></td>
                 </form>
            {% endif %}
         {% elif key == "submission_time" %}
@@ -155,9 +155,9 @@
                 <td width="80%"> {{ answer[key] }} </td>
                 {% if session['username'] %}
                     <form>
-                    <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}" {{ "disabled" if answer['id'] in answer_votes }}>VOTE UP</button></td>
+                    <td width="10"><button type="submit" class="upbutton" formaction="/question/{{ question['id'] }}/vote-up" formmethod="POST" name="answer" value="{{ answer['id'] }}" style="{{ 'background-color: #4CAF50' if answer_votes[answer['id']] == "up" }}" {{ "disabled" if answer['id'] in answer_votes }}>VOTE UP</button></td>
                         <br>
-                    <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}" {{ "disabled" if answer['id'] in answer_votes }}>VOTE DOWN</button></td>
+                    <td width="10"><button type="submit" class="downbutton" formaction="/question/{{ question['id'] }}/vote-down" formmethod="POST" name="answer" value="{{ answer['id'] }}" style="{{ 'background-color: red' if answer_votes[answer['id']] == "down" }}" {{ "disabled" if answer['id'] in answer_votes }}>VOTE DOWN</button></td>
                     </form>
                 {% endif %}
             {% elif key == "submission_time" %}

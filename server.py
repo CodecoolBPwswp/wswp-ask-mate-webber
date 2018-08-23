@@ -21,7 +21,6 @@ a_head = data_manager.ANSWER_HEADERS
 
 @app.route('/')
 def main():
-    print(session)
     questions = data_manager.get_latest_five_question()
     first = True
     return render_template("list.html", questions=questions, first=first)
@@ -138,7 +137,7 @@ def voter(question_id, dir):
     data = request.form.to_dict()
     user_id = session["user_id"]
     data_manager.reputation_handler_for_votes(dir, operatorr, data, question_id)
-    data_manager.vote(question_id, data, operatorr, user_id)
+    data_manager.vote(question_id, data, operatorr, user_id, dir)
     return redirect('question/{}'.format(question_id))
 
 
