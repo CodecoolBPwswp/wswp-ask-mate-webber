@@ -91,6 +91,7 @@ def question(question_id):
     tags = data_manager.get_tags(question_id)
     question_vote = None
     answer_votes = None
+    print(answers)
     if session:
         question_vote = data_manager.votes_for_question(question_id, session['user_id'])
         answer_votes = data_manager.votes_for_answer(session['user_id'])
@@ -300,6 +301,14 @@ def user_page(user_id):
 def tags():
     tags = data_manager.get_all_tag()
     return render_template('tags.html', tags=tags)
+
+
+@app.route('/accepted', methods=['POST'])
+def accepted_answer():
+    answer_id = request.form.to_dict()['answer_id']
+    question_id = data_manager.accepted_answer_and_return_question_id(answer_id)
+    data_manager.accepted_question_answer(question_id)
+    return redirect('question/{}'.format(question_id))
 
 
 if __name__ == '__main__':

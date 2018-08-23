@@ -432,3 +432,25 @@ def get_all_tag(cursor):
 
     tags = cursor.fetchall()
     return tags
+
+
+@database_common.connection_handler
+def accepted_answer_and_return_question_id(cursor, answer_id):
+    cursor.execute("""
+                UPDATE answer SET accepted = True
+                WHERE id = %s   
+                """, (answer_id,))
+
+    cursor.execute("SELECT question_id FROM answer WHERE id=%s", (answer_id,))
+
+    question_id = cursor.fetchall()[0]['question_id']
+
+    return question_id
+
+
+@database_common.connection_handler
+def accepted_question_answer(cursor, question_id):
+    cursor.execute("""
+                UPDATE question SET accepted_answer = True
+                WHERE id = %s
+                """, (question_id,))

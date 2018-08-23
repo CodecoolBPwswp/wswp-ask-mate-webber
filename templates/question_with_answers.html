@@ -15,7 +15,7 @@ table {
     table-layout: auto;
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 80%;
+    width: 60%;
     {#border-radius: 25px;#}
 }
 
@@ -65,9 +65,9 @@ h1 {
 }
 
 h2 {
-    color: darkorange;
+    color: darkmagenta;
     position: relative;
-    left: 150px;
+    left: 330px;
 }
 
 .qcomment{
@@ -85,6 +85,9 @@ h2 {
     background-color: grey;
 }
 
+.green_arrow{
+    text-align: center;
+}
 
 </style>
 </head>
@@ -221,6 +224,18 @@ h2 {
                         </button>
                     </form></td>
                 {% endif %}
+                    {% if question['user_id'] == session["user_id"] and not answer['accepted'] and not question['accepted_answer'] %}
+                        <td><form action="/accepted" method="POST">
+                            <button type="submit" name="answer_id" value="{{ answer['id'] }}">
+                                MARK AS ACCEPTED
+                            </button>
+                        </form></td>
+                    {% elif answer['accepted'] %}
+                        <td class="green_arrow">
+                            <img src="http://pluspng.com/img-png/green-tick-png-check-correct-mark-success-tick-valid-yes-icon-128.png" width="30px" height="30px">
+                        </td>
+                    {% endif %}
+
             {% elif key == "vote_number" %}
                 <th width="10%">Vote number</th>
                 <td width="80%"> {{ answer[key] }} </td>
