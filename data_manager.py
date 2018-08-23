@@ -458,7 +458,7 @@ def accepted_question_answer(cursor, question_id):
 
 @database_common.connection_handler
 def all_users_data(cursor):
-    cursor.execute("""SELECT users.id, users.username, users.date, comments.sum_comment, questions.sum_question, answers.sum_answer
+    cursor.execute("""SELECT users.id, users.username, users.date, users.reputation, comments.sum_comment, questions.sum_question, answers.sum_answer
                         
                           FROM users
                              LEFT JOIN (
@@ -469,6 +469,43 @@ def all_users_data(cursor):
                               ) AS questions ON comments.user_id = questions.user_id
                              LEFT JOIN (
                               SELECT COUNT(answer.user_id) AS sum_answer, answer.user_id FROM answer GROUP BY answer.user_id
-                              ) AS answers ON questions.user_id = answers.user_id""")
+                              ) AS answers ON questions.user_id = answers.user_id ORDER BY users.reputation DESC""")
     users_data = cursor.fetchall()
     return users_data
+
+
+@database_common.connection_handler
+def reputation_handler_for_votes(cursor,dir, operatorr, data, question_id):
+
+    if "question" in data.keys():
+        cursor.execute("SELECT user_id FROM question WHERE id = %s", (question_id,))
+        user_id = cursor.fetchall()[0]['user_id']
+
+        cursor.execute("SELECT reputation FROM users WHERE id=%s", (user_id,))
+        reputation = cursor.fetchall()[0]['reputation']
+
+        rep = operatorr(reputation, 5) if dir == "up" else operatorr(reputation, 2)
+
+    elif "answer" in data.keys():
+        cursor.execute("SELECT user_id FROM answer WHERE id = %s", (data['answer'],))
+        user_id = cursor.fetchall()[0]['user_id']
+
+        cursor.execute("SELECT reputation FROM users WHERE id=%s", (user_id,))
+        reputation = cursor.fetchall()[0]['reputation']
+
+        rep = operatorr(reputation, 10) if dir == "up" else operatorr(reputation, 2)
+
+    cursor.execute("UPDATE users SET reputation= %s WHERE id = %s", (rep, user_id))
+
+
+@database_common.connection_handler
+def accepted_answer_reputation(cursor, answer_id):
+    cursor.execute("SELECT user_id FROM answer WHERE id = %s", (answer_id,))
+    user_id = cursor.fetchall()[0]['user_id']
+
+    cursor.execute("SELECT reputation FROM users WHERE id=%s", (user_id,))
+    reputation = cursor.fetchall()[0]['reputation']
+
+    reputation += 15
+
+    cursor.execute("UPDATE users SET reputation= %s WHERE id = %s", (reputation, user_id))

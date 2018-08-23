@@ -137,6 +137,7 @@ def voter(question_id, dir):
     operatorr = operator.__add__ if dir == "up" else operator.__sub__
     data = request.form.to_dict()
     user_id = session["user_id"]
+    data_manager.reputation_handler_for_votes(dir, operatorr, data, question_id)
     data_manager.vote(question_id, data, operatorr, user_id)
     return redirect('question/{}'.format(question_id))
 
@@ -307,6 +308,7 @@ def accepted_answer():
     answer_id = request.form.to_dict()['answer_id']
     question_id = data_manager.accepted_answer_and_return_question_id(answer_id)
     data_manager.accepted_question_answer(question_id)
+    data_manager.accepted_answer_reputation(answer_id)
     return redirect('question/{}'.format(question_id))
 
 

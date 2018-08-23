@@ -11,6 +11,7 @@
         <table>
             <tr>
                 <th>Username</th>
+                <th>Reputation</th>
                 <th>Number of questions</th>
                 <th>Number of answers</th>
                 <th>Number of comments</th>
@@ -19,9 +20,10 @@
             {% for user in users %}
             <tr>
                 <td><a href="/user/{{ user.id }}">{{ user.username }}</a></td>
-                <td>{{ user.sum_question if user.sum_question else 0 }}</td>
-                <td>{{ user.sum_answer if user.sum_answer else 0 }}</td>
-                <td>{{ user.sum_comment if user.sum_qcomment else 0 }}</td>
+                <td>{{ user.reputation }}</td>
+                <td>{{ user.sum_question if user.sum_question != None else 0 }}</td>
+                <td>{{ user.sum_answer if user.sum_answer != None else 0 }}</td>
+                <td>{{ user.sum_comment if user.sum_qcomment != None else 0 }}</td>
                 <td>{{ user.date }}</td>
             </tr>
             {% endfor %}
