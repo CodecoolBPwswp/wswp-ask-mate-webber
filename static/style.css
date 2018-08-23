@@ -8,7 +8,7 @@ table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 60%;
-    {#border-radius: 25px;#}
+    /*{#border-radius: 25px;#}*/
 }
 
 td, th {
@@ -59,7 +59,7 @@ h1 {
 h2 {
     color: darkorange;
     position: relative;
-    left: 150px;
+    left: 330px;
 }
 
 .qcomment{
@@ -77,3 +77,6 @@ h2 {
     background-color: grey;
 }
 
+.user_page{
+    width: 60%;
+}

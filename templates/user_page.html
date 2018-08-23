@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div align="center">
     {% if questions %}
         <h1>{{ questions[0]['username'] }}'s page</h1>
     {% elif answers %}
@@ -15,18 +16,19 @@
     {% else %}
         <h1><a href="/">Nothing to show</a></h1>
     {% endif %}
+</div>
     {% if questions %}
     <h2>Questions You have asked:</h2>
         <div align="center">
-        <table>
+        <table class="user_page">
             <tr>
-                <th>Submission time</th>
-                <th>Title of question</th>
+                <th width="20%">Submission time</th>
+                <th width="80%">Title of question</th>
             </tr>
             {% for question in questions %}
                 <tr>
-                    <td>{{ question.submission_time }}</td>
-                    <td>{{ question.title }}</td>
+                    <td width="20%">{{ question.submission_time }}</td>
+                    <td width="80%">{{ question.title }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -35,15 +37,15 @@
     {% if answers %}
     <h2>Answers You have given:</h2>
         <div align="center">
-        <table>
+        <table class="user_page">
             <tr>
-                <th>Submission time</th>
+                <th width="20%">Submission time</th>
                 <th>Message</th>
             </tr>
             {% for answer in answers %}
                 <tr>
-                    <td>{{ answer.submission_time }}</td>
-                    <td>{{ answer.message }}</td>
+                    <td width="20%">{{ answer.submission_time }}</td>
+                    <td width="80%">{{ answer.message }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -52,15 +54,15 @@
     {% if comments %}
     <h2>Comments You have written:</h2>
         <div align="center">
-        <table>
+        <table class="user_page">
             <tr>
-                <th>Submission time</th>
+                <th width="20%">Submission time</th>
                 <th>Message</th>
             </tr>
             {% for comment in comments %}
                 <tr>
-                    <td>{{ comment.submission_time }}</td>
-                    <td>{{ comment.message }}</td>
+                    <td width="20%">{{ comment.submission_time }}</td>
+                    <td width="80%">{{ comment.message }}</td>
                 </tr>
             {% endfor %}
         </table>

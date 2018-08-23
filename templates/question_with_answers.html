@@ -14,7 +14,7 @@
         <form action="/logout"><input type="submit" value="Logout"></form>
     {% endif %}
 
-    <h2 align="left">Question:</h2>
+    <h2 class="header" align="left">Question:</h2>
     <table width="50%" border="1">
     {% for key in q_head %}
        <tr>
@@ -123,7 +123,7 @@
 
     {% if answers %}
     <div align="center">
-    <h2 align="left">Answers:</h2>
+    <h2 class="header" align="left">Answers:</h2>
     {%  for answer in answers %}
         <table width="50%" border="1">
         {% for key in a_head %}
