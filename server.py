@@ -168,7 +168,7 @@ def new_comment_to_answer(answer_id):
     else:
         comment = request.form.to_dict()
         comment["answer_id"] = answer_id
-        comment["question_id"] = None
+        comment["question_id"] = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
         comment["edited_count"] = None
         comment["user_id"] = session["user_id"]
         question_id = data_manager.answer_comment(comment)
