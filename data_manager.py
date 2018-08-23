@@ -458,7 +458,7 @@ def accepted_question_answer(cursor, question_id):
 
 @database_common.connection_handler
 def all_users_data(cursor):
-    cursor.execute("""SELECT users.username, users.date, comments.sum_comment, questions.sum_question, answers.sum_answer
+    cursor.execute("""SELECT users.id, users.username, users.date, comments.sum_comment, questions.sum_question, answers.sum_answer
                         
                           FROM users
                              LEFT JOIN (
