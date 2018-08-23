@@ -91,7 +91,7 @@
     {% if comments  %}
             <table><p><strong>Comments:</strong></p></table>
             {%  for comment in comments %}
-                {% if comment['question_id'] != None %}
+                {% if comment['question_id'] != None and comment['answer_id'] == None %}
                     <table class="qcomment">
                         <col width="15px" />
                         <col width="50px" />

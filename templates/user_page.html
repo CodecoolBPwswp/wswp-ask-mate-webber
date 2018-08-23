@@ -28,7 +28,7 @@
             {% for question in questions %}
                 <tr>
                     <td width="20%">{{ question.submission_time }}</td>
-                    <td width="80%">{{ question.title }}</td>
+                    <td width="80%"><a href="/question/{{ question['id'] }}">{{ question.title }}</a></td>
                 </tr>
             {% endfor %}
         </table>
@@ -45,7 +45,7 @@
             {% for answer in answers %}
                 <tr>
                     <td width="20%">{{ answer.submission_time }}</td>
-                    <td width="80%">{{ answer.message }}</td>
+                    <td width="80%"><a href="/question/{{ answer["question_id"] }}">{{ answer.message }}</a></td>
                 </tr>
             {% endfor %}
         </table>
@@ -62,7 +62,7 @@
             {% for comment in comments %}
                 <tr>
                     <td width="20%">{{ comment.submission_time }}</td>
-                    <td width="80%">{{ comment.message }}</td>
+                    <td width="80%"><a href="/question/{{ comment['question_id'] }}">{{ comment.message }}</a></td>
                 </tr>
             {% endfor %}
         </table>
