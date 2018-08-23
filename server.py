@@ -305,7 +305,6 @@ def tags():
 @app.route('/all_user')
 def all_user():
     users_data = data_manager.all_users_data()
-
     return render_template('list_users.html', users=users_data)
 
 

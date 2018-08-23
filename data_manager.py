@@ -436,10 +436,17 @@ def get_all_tag(cursor):
 
 @database_common.connection_handler
 def all_users_data(cursor):
-    cursor.execute("""SELECT users.username, users.date, COUNT(question.id), COUNT(answer.id), COUNT(comment.id)
-                      FROM users LEFT JOIN comment ON users.id = comment.user_id 
-                                    RIGHT JOIN question ON comment.question_id = question.id 
-                                    RIGHT JOIN answer ON question.id = answer.question_id
-                      GROUP BY users.username, users.date""")
+    cursor.execute("""SELECT users.username, users.date, comments.sum_comment, questions.sum_question, answers.sum_answer
+                        
+                          FROM users
+                             LEFT JOIN (
+                              SELECT COUNT(comment.user_id) AS sum_comment, comment.user_id FROM comment GROUP BY comment.user_id
+                              ) AS comments ON users.id = comments.user_id
+                             LEFT JOIN (
+                              SELECT COUNT(question.user_id) AS sum_question, question.user_id FROM question GROUP BY question.user_id
+                              ) AS questions ON comments.user_id = questions.user_id
+                             LEFT JOIN (
+                              SELECT COUNT(answer.user_id) AS sum_answer, answer.user_id FROM answer GROUP BY answer.user_id
+                              ) AS answers ON questions.user_id = answers.user_id""")
     users_data = cursor.fetchall()
     return users_data

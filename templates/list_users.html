@@ -12,17 +12,17 @@
             <tr>
                 <th>Username</th>
                 <th>Number of questions</th>
-                <th>NUmber of answers</th>
+                <th>Number of answers</th>
                 <th>Number of comments</th>
                 <th>Registration date</th>
             </tr>
             {% for user in users %}
             <tr>
                 <td>{{ user.username }}</td>
-                <td>{{ user.question }}</td>
-                <td>{{ user.answer }}</td>
-                <td>{{ user.comment }}</td>
-                <td>{{ user.registration }}</td>
+                <td>{{ user.sum_question if user.sum_question else 0 }}</td>
+                <td>{{ user.sum_answer if user.sum_answer else 0 }}</td>
+                <td>{{ user.sum_comment if user.sum_qcomment else 0 }}</td>
+                <td>{{ user.date }}</td>
             </tr>
             {% endfor %}
         </table>
