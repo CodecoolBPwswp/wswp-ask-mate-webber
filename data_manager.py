@@ -432,3 +432,14 @@ def get_all_tag(cursor):
 
     tags = cursor.fetchall()
     return tags
+
+
+@database_common.connection_handler
+def all_users_data(cursor):
+    cursor.execute("""SELECT users.username, users.date, COUNT(question.id), COUNT(answer.id), COUNT(comment.id)
+                      FROM users LEFT JOIN comment ON users.id = comment.user_id 
+                                    RIGHT JOIN question ON comment.question_id = question.id 
+                                    RIGHT JOIN answer ON question.id = answer.question_id
+                      GROUP BY users.username, users.date""")
+    users_data = cursor.fetchall()
+    return users_data

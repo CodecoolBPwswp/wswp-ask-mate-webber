@@ -302,6 +302,13 @@ def tags():
     return render_template('tags.html', tags=tags)
 
 
+@app.route('/all_user')
+def all_user():
+    users_data = data_manager.all_users_data()
+
+    return render_template('list_users.html', users=users_data)
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

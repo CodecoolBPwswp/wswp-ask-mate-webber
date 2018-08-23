@@ -3,35 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ask a question | Askmate</title>
-    <style>
-        body {
-            background-color: #F0EDE5;
-        }
-
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 80%;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 6px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #92B6D5;
-        }
-
-        h1 {
-            color: darkmagenta;
-        }
-
-        h2 {
-            color: darkorange;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <h1>Enter your question</h1>
