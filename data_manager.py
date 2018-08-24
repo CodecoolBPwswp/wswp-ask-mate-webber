@@ -478,20 +478,24 @@ def all_users_data(cursor):
 def reputation_handler_for_votes(cursor,dir, operatorr, data, question_id):
 
     if "question" in data.keys():
-        cursor.execute("SELECT user_id FROM question WHERE id = %s", (question_id,))
-        user_id = cursor.fetchall()[0]['user_id']
+        cursor.execute("""
+                    SELECT users.reputation, users.id FROM question LEFT JOIN users ON question.user_id = users.id WHERE question.id = %s
+                    """, (question_id,))
 
-        cursor.execute("SELECT reputation FROM users WHERE id=%s", (user_id,))
-        reputation = cursor.fetchall()[0]['reputation']
+        data = cursor.fetchall()[0]
+        reputation = data['reputation']
+        user_id = data['id']
 
         rep = operatorr(reputation, 5) if dir == "up" else operatorr(reputation, 2)
 
     elif "answer" in data.keys():
-        cursor.execute("SELECT user_id FROM answer WHERE id = %s", (data['answer'],))
-        user_id = cursor.fetchall()[0]['user_id']
+        cursor.execute("""
+                        SELECT users.reputation, users.id FROM answer LEFT JOIN users ON answer.user_id = users.id WHERE answer.id = %s
+                        """, (data['answer'],))
 
-        cursor.execute("SELECT reputation FROM users WHERE id=%s", (user_id,))
-        reputation = cursor.fetchall()[0]['reputation']
+        data = cursor.fetchall()[0]
+        reputation = data['reputation']
+        user_id = data['id']
 
         rep = operatorr(reputation, 10) if dir == "up" else operatorr(reputation, 2)
 

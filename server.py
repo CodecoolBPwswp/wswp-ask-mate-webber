@@ -198,22 +198,23 @@ def delete_comment(comment_id):
 
 @app.route('/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
-    if request.method == 'GET':
-        data_id = request.args.to_dict()
-        comment_update = True
-        question_comment = False
-        comment = data_manager.get_comment_by_id(comment_id)
-
-        if 'question_id' in data_id.keys():
-            question_comment = True
-        return render_template('new_comment.html', comment_update=comment_update, comment=comment,
-                               question_comment=question_comment)
-
-    elif request.method == 'POST':
+    if request.method == 'POST':
         comment = request.form.to_dict()
         question_id = data_manager.update_question_comment_by_id(comment, comment_id)
 
         return redirect('question/{}'.format(question_id['question_id']))
+
+    data_id = request.args.to_dict()
+    comment_update = True
+    question_comment = False
+    comment = data_manager.get_comment_by_id(comment_id)
+
+    if 'question_id' in data_id.keys():
+        question_comment = True
+    return render_template('new_comment.html', comment_update=comment_update, comment=comment,
+                           question_comment=question_comment)
+
+    el
 
 
 @app.route('/question/<int:question_id>/new-tag', methods=['GET', 'POST'])
